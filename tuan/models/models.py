@@ -1,6 +1,7 @@
 # -*-coding:gb18030-*-
 
 from django.db import models
+from django.contrib import admin
 
 
 # 团购商品的信息
@@ -9,6 +10,7 @@ class Deal(models.Model):
     value = models.FloatField()             # 原价
     price = models.FloatField()             # 现价
     rebate = models.FloatField()            # 折扣
+    saving = models.FloatField()
     title = models.CharField(max_length=1024) # 标题
     image = models.CharField(max_length=1024) # 图片URL
     uptime = models.DateTimeField(auto_now=True) # 商品上架时间
@@ -21,7 +23,7 @@ class Deal(models.Model):
     def __unicode__(self):
         return self.title
 
-    class Admin:
+    class Admin(admin.ModelAdmin):
         pass
     
 
@@ -33,8 +35,6 @@ class Site(models.Model):
     def __unicode__(self):
         return self.name
 
-    class Admin:
-        pass
 
 # 商品分类
 class Categorie(models.Model):
@@ -50,8 +50,7 @@ class City(models.Model):
     def __unicode__(self):
         return self.name
     
-    class Admin:
-        pass
+
     
 
 # 团购网站和城市的对应关系
@@ -63,5 +62,9 @@ class SiteCityMap(models.Model):
     def __unicode__(self):
         return self.site + '-' + self.city
     
-    class Admin:
-        pass
+
+admin.site.register(Deal, Deal.Admin)
+admin.site.register(Site)
+admin.site.register(Categorie)
+admin.site.register(City)
+admin.site.register(SiteCityMap)

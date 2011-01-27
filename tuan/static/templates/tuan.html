@@ -1,0 +1,56 @@
+<!-- -*-coding:utf-8-*- -->
+
+{%include "header.html"%}
+
+<div class="deallist">
+
+  {% if deals|length == 0 %}
+
+  抱歉，暂无商品。
+
+  {% else %}
+
+  <ul class="list">
+    
+
+    {%for deal in deals%}
+
+    <li>
+      <div class="deal">
+        
+        <!-- 区域：商品ID 
+        <div class="id">{{deal.id}}</div>
+-->
+        <!-- 区域：商品图片 -->
+        <div class="image">
+          <a title="{{deal.title}}"
+             href="{{deal.url}}" target="_blank">
+            <img alt="{{deal.title}}" src="{{deal.image}}" style="weight: 175px; width:255px">
+          </a>
+        </div>
+        
+        <!-- 区域：商品信息-->
+        <div class="info">
+	  <h4><a title="{{deal.title}}" href="{{deal.url}}" target="_blank">{{deal.title|truncatewords:"100"}}</a></h4>
+	  <p class="p_1"> <span class="site"><a title="{{deal.title}}" href="{{deal.url}}" target="_blank">去看看！</a></span> </p>
+	  <p class="p_2">
+            <span>现价：<em class="price">¥{{deal.price}}</em></span>
+            <span>原价：<em class="value">¥{{deal.value}}</em></span>
+            <span>节省：<em class="saving">{{deal.saving}}</em></span>
+            <span>折扣：<em class="rebate">{{deal.rebate}}折</em></span>
+          </p>
+	  <p class="p_3">来自 <span class="site_name"><a title="{{deal.site_name}}" href="{{deal.url}}" target="_blank">{{deal.site_name}}</a></span></p>
+	</div>
+
+      </div>
+    </li>
+
+    {%endfor%}
+
+  </ul>
+
+  {% endif %}
+
+</div>
+
+{%include "footer.html"%}

@@ -1,4 +1,5 @@
-# Django settings for doudoutu project.
+# -*-coding:gb18030-*-
+# Django settings for tuan project.
 
 DEBUG = True
 TEMPLATE_DEBUG = DEBUG
@@ -12,7 +13,7 @@ MANAGERS = ADMINS
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3', # Add 'postgresql_psycopg2', 'postgresql', 'mysql', 'sqlite3' or 'oracle'.
-        'NAME': 'data.sqlite3',                      # Or path to database file if using sqlite3.
+        'NAME': 'data/tuan.sqlite3',                      # Or path to database file if using sqlite3.
         'USER': '',                      # Not used with sqlite3.
         'PASSWORD': '',                  # Not used with sqlite3.
         'HOST': '',                      # Set to empty string for localhost. Not used with sqlite3.
@@ -55,13 +56,14 @@ MEDIA_URL = ''
 # URL prefix for admin media -- CSS, JavaScript and images. Make sure to use a
 # trailing slash.
 # Examples: "http://foo.com/media/", "/media/".
-ADMIN_MEDIA_PREFIX = '/media/'
+ADMIN_MEDIA_PREFIX = '/static/admin/'
 
-STATIC_ROOT = './static'
+PROJECT_ROOT = '/home/kebing/workspace/doudoutu/tuan/'
+STATIC_ROOT = PROJECT_ROOT + 'static/'
 STATIC_URL = '/static/'
 
 # Make this unique, and don't share it with anybody.
-SECRET_KEY = 'qnh&ktip61-kctx=lxu-v1g+-axz^)07^84&w(0ecwqp8q+#g_'
+SECRET_KEY = '5%bdf_e)d^wvd1pjq2h=xh*x05!f707qqf=wa1)fu&)+k(how-'
 
 # List of callables that know how to import templates from various sources.
 TEMPLATE_LOADERS = (
@@ -78,13 +80,13 @@ MIDDLEWARE_CLASSES = (
     'django.contrib.messages.middleware.MessageMiddleware',
 )
 
-ROOT_URLCONF = 'doudoutu.urls'
+ROOT_URLCONF = 'tuan.urls'
 
 TEMPLATE_DIRS = (
     # Put strings here, like "/home/html/django_templates" or "C:/www/django/templates".
     # Always use forward slashes, even on Windows.
     # Don't forget to use absolute paths, not relative paths.
-    
+    PROJECT_ROOT + 'static/templates'
 )
 
 INSTALLED_APPS = (
@@ -98,5 +100,9 @@ INSTALLED_APPS = (
     # Uncomment the next line to enable admin documentation:
     'django.contrib.admindocs',
 
-    'tuan',
+    'tuan.models',
+    'tuan.views',
+
+    'tuan.spider',
+    'tuan.ipinfo',
 )
