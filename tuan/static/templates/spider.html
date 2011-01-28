@@ -1,0 +1,15 @@
+<!-- -*-coding:utf-8-*- -->
+
+{%include "header.html"%}
+
+<h3>成功抓取 {{ n_grab }} 条记录</h3>
+
+<div>
+  <ul>
+    {% for city_id,url in city_id_url_list %}
+    <li>城市ID: {{ city_id }}；URL：{{ url }}</li>
+    {% endfor %}
+  </ul>
+</div>
+
+{%include "footer.html"%}
