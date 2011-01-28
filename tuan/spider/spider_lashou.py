@@ -7,7 +7,10 @@ import datetime
 import spider_base
 from spider_base import StateBase
 from spider_base import SpiderBase
+from spider_base import CitySpiderBase
 from spider_base import get_attr
+import re
+#from spider import DealSpider
 
 class StateInitial(StateBase):
     def start_div(self, attrs):
@@ -59,6 +62,19 @@ class StateImage(StateBase):
     def start_img(self, attrs):
         img=get_attr(attrs, 'src')
         self.context.add_image(img)
+        self.change_state(self.context.state_div_timeleft)
+
+
+class StateDivTimeLeft(StateBase):
+    def start_div(self, attrs):
+        c=get_attr(attrs, 'class')
+        if c == 'time_left':
+            self.change_state(self.context.state_timeleft)
+
+class StateTimeleft(StateBase):
+    def handle_data(self, data):
+        timeleft=data.strip()
+        self.context.add_timeleft(timeleft)
         self.change_state(self.context.state_initial)
 
 
@@ -73,28 +89,69 @@ class SpiderLashou(SpiderBase):
         self.state_h4_value=StateH4Value(self)
         self.state_div_image=StateDivImage(self)
         self.state_image=StateImage(self)
+        self.state_div_timeleft=StateDivTimeLeft(self)
+        self.state_timeleft=StateTimeleft(self)
+        self.state=self.state_initial
+
+class CityStateInitial(StateBase):
+    def start_div(self, attrs):
+        c=get_attr(attrs, 'class')
+        if c == 'cityli_center' or c == 'city_zxsn':
+            self.change_state(self.context.state_a_city)
+            
+class CityStateACity(StateBase):
+    def start_a(self, attrs):
+        href=get_attr(attrs, 'href').strip()
+        print href
+        if href[0] != '/' or href.find('.') >= 0 or href.find('?') >= 0 or href.find('=') >= 0 or href.find('&') >= 0 or href.find('#') >= 0:
+            self.change_state(self.context.state_end)
+            return
+        city=href[1:].lower()
+        url=self.context.url_prefix + href
+        print city
+        self.context.add_city(city)
+        self.context.add_url(url)
+        self.change_state(self.context.state_name)
+    def start_div(self, attrs):
+        c=get_attr(attrs, 'class')
+        if c == 'g_main' or c == 'goods':
+            self.change_state(self.context.state_end)
+        
+class CityStateName(StateBase):
+    def handle_data(self, data):
+        name=data.strip()
+        print name
+        self.context.add_name(unicode(name,'utf-8'))
+        self.change_state(self.context.state_a_city)
+
+class CityStateEnd(StateBase):
+    pass
+
+class CitySpiderLashou(CitySpiderBase):
+    def __init__(self):
+        CitySpiderBase.__init__(self, 'lashou')
+        self.url_prefix='http://www.lashou.com'
+        self.state_initial=CityStateInitial(self)
+        self.state_a_city=CityStateACity(self)
+        self.state_name=CityStateName(self)
+        self.state_end=CityStateEnd(self)
         self.state=self.state_initial
 
 
-def claw(webs):
-    spider_base.claw(SpiderLashou, webs)
+# def test_spider():
+#     LashouList = [
+#         ['拉手网', 'shenzhen', 'http://www.lashou.com/shenzhen'],
+#         ['拉手网', 'chengdu', 'http://www.lashou.com/chengdu'],
+#         ['拉手网', 'beijing', 'http://www.lashou.com/beijing'],
+#         ['拉手网', 'shanghai', 'http://www.lashou.com/shanghai']
+#         ];
 
-
-def test_spider():
-    LashouList = [
-        ['拉手网', 'shenzhen', 'http://www.lashou.com/shenzhen'],
-        ['拉手网', 'chengdu', 'http://www.lashou.com/chengdu'],
-        ['拉手网', 'beijing', 'http://www.lashou.com/beijing'],
-        ['拉手网', 'shanghai', 'http://www.lashou.com/shanghai']
-        ];
-
-    dt=datetime.datetime.now().strftime('%Y-%m-%d')
-
-    for site,city,site_url in LashouList:
-        print '<' + city + '>:'
-        s=SpiderLashou()
-        spider_base.fetch_and_parse(s, site_url)
-        spider_base.print_result(s, site, city, dt, site_url)
+#     for site,city,site_url in LashouList:
+#         print '<' + city + '>:'
+#         s=SpiderLashou()
+#         ds = DealSpider()
+#         ds.fetch_and_parse(s, site_url)
+#         print s
 
 def main():
     test_spider()

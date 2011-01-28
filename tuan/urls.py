@@ -17,9 +17,12 @@ urlpatterns = patterns('',
     # Uncomment the next line to enable the admin:
     (r'^admin/', include(admin.site.urls)),
 
-    # 默认全部定向到这里
-    (r'^$', include('tuan.views.urls')),
-
     (r'^static/(?P<path>.*)$', 'django.views.static.serve',
-        {'document_root': settings.STATIC_ROOT})
+        {'document_root': settings.STATIC_ROOT}),
+
+    (r'^spider/', include('tuan.spider.urls')),
+
+
+    (r'^deal/', include('tuan.views.urls')),
+
 )

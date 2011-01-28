@@ -1,24 +1,25 @@
-# -*-coding:gb18030-*-
+# -*-coding:utf-8-*-
 
 from django.db import models
 from django.contrib import admin
 
 
-# ÍÅ¹ºÉÌÆ·µÄĞÅÏ¢
+# å›¢è´­å•†å“çš„ä¿¡æ¯
 class Deal(models.Model):
-    url = models.CharField(max_length=1024) # ÉÌÆ·URL
-    value = models.FloatField()             # Ô­¼Û
-    price = models.FloatField()             # ÏÖ¼Û
-    rebate = models.FloatField()            # ÕÛ¿Û
+    url = models.CharField(max_length=1024) # å•†å“URL
+    value = models.FloatField()             # åŸä»·
+    price = models.FloatField()             # ç°ä»·
+    rebate = models.FloatField()            # æŠ˜æ‰£
     saving = models.FloatField()
-    title = models.CharField(max_length=1024) # ±êÌâ
-    image = models.CharField(max_length=1024) # Í¼Æ¬URL
-    uptime = models.DateTimeField(auto_now=True) # ÉÌÆ·ÉÏ¼ÜÊ±¼ä
-    downtime = models.DateTimeField(auto_now=True) # ÉÌÆ·ÏÂ¼ÜÊ±¼ä
-    #bought = models.IntegerField()             # ÒÑ¹ºÂòÈËÊı
-    site = models.IntegerField()              # ËùÊôÍÅ¹ºÍøÕ¾ID
-    categorie = models.IntegerField()         # ÉÌÆ··ÖÀà
-    city = models.IntegerField()              # ³ÇÊĞ
+    title = models.CharField(max_length=1024) # æ ‡é¢˜
+    image = models.CharField(max_length=1024) # å›¾ç‰‡URL
+    timeleft = models.IntegerField(help_text='å•†å“å‰©ä½™æ—¶é—´ï¼ˆç§’ï¼‰')
+    grabtime = models.DateTimeField(help_text='æŠ“å–æ—¶é—´')
+    #bought = models.IntegerField(default=0, help_text='å·²è´­ä¹°äººæ•°')
+    site = models.CharField(max_length=64, help_text='æ‰€å±å›¢è´­ç½‘ç«™')
+    city = models.CharField(max_length=64, help_text='åŸå¸‚')
+    categorie = models.IntegerField(default=0, help_text='å•†å“åˆ†ç±»')
+    rank = models.IntegerField(default=0, help_text='å•†å“ç­‰çº§')
     
     def __unicode__(self):
         return self.title
@@ -27,25 +28,27 @@ class Deal(models.Model):
         pass
     
 
-# ÍÅ¹ºÍøÕ¾µÄĞÅÏ¢
+# å›¢è´­ç½‘ç«™çš„ä¿¡æ¯
 class Site(models.Model):
-    name = models.CharField(max_length=1024) # ÍøÕ¾Ãû³Æ
-    url = models.CharField(max_length=1024)  # ÍøÕ¾URL
+    site = models.CharField(primary_key=True, max_length=64) # ç½‘ç«™
+    name = models.CharField(max_length=64) # ç½‘ç«™åç§°
+    url = models.CharField(max_length=1024)  # ç½‘ç«™URL
     
     def __unicode__(self):
         return self.name
 
 
-# ÉÌÆ··ÖÀà
+# å•†å“åˆ†ç±»
 class Categorie(models.Model):
-    name = models.CharField(max_length=64) # ·ÖÀàÃû³Æ
+    name = models.CharField(max_length=64) # åˆ†ç±»åç§°
     
     def __unicode__(self):
         return self.name
 
-# ³ÇÊĞĞÅÏ¢
+# åŸå¸‚ä¿¡æ¯
 class City(models.Model):
-    name = models.CharField(max_length=64) # ³ÇÊĞÃû³Æ
+    city = models.CharField(primary_key=True, max_length=64) # åŸå¸‚
+    name = models.CharField(max_length=64) # åŸå¸‚åç§°
     
     def __unicode__(self):
         return self.name
@@ -53,18 +56,20 @@ class City(models.Model):
 
     
 
-# ÍÅ¹ºÍøÕ¾ºÍ³ÇÊĞµÄ¶ÔÓ¦¹ØÏµ
-class SiteCityMap(models.Model):
-    site = models.IntegerField()
-    city = models.IntegerField()
-    url = models.CharField(max_length=1024) # ÍÅ¹ºÍøÕ¾×Ó³ÇÊĞURL
+# å„åŸå¸‚ç½‘ç«™
+class SiteCity(models.Model):
+    site = models.CharField(max_length=64)
+    city = models.CharField(max_length=64)
+    name = models.CharField(max_length=64)
+    url = models.CharField(max_length=1024) # å›¢è´­ç½‘ç«™å­åŸå¸‚URL
+    grabtime = models.DateTimeField(help_text='æŠ“å–æ—¶é—´')
     
     def __unicode__(self):
-        return self.site + '-' + self.city
+        return self.name
     
 
 admin.site.register(Deal, Deal.Admin)
 admin.site.register(Site)
 admin.site.register(Categorie)
 admin.site.register(City)
-admin.site.register(SiteCityMap)
+admin.site.register(SiteCity)

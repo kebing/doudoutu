@@ -1,19 +1,21 @@
 # -*-coding:utf-8-*-
 
-import spider_list
-import spider_qqtuan
 import spider_lashou
 
-SpiderAll = [
-    ['QQ团', spider_qqtuan.claw, spider_list.QQTuanList],
-    ['拉手网', spider_lashou.claw, spider_list.LashouList]
-    ];
+site_spider_map = {
+    #  site  :    deal spider             |   city spider
+    'lashou' : [spider_lashou.SpiderLashou,
+                spider_lashou.CitySpiderLashou],
+    }
 
-def claw():
-    for site, spider, webs in SpiderAll:
-#        print "Claw site <{0}>".format(site)
-        spider(webs)
+class SpiderFactory:
+    def new_deal_spider(self, site):
+        return site_spider_map[site][0]()
+    
+    def new_city_spider(self, site):
+        return site_spider_map[site][1]()
+    
 
 if __name__ == '__main__':
-    claw()
+    pass
 
