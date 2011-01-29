@@ -21,14 +21,14 @@ class DealSpider:
                 deal.url = url
                 deal.value = float(value)
                 deal.price = float(price)
-                deal.rebate = deal.price / deal.value
+                deal.rebate = float("{0:.1f}".format(deal.price * 10 / deal.value))
                 deal.saving = deal.value - deal.price
                 deal.title = title
                 deal.image = image
                 deal.timeleft = timeleft
                 deal.grabtime = grabtime
                 deal.site = site
-                deal.categorie = 0;
+                deal.category = 0;
                 deal.city = city;
                 deal.save()
                 n += 1

@@ -18,7 +18,7 @@ class Deal(models.Model):
     #bought = models.IntegerField(default=0, help_text='已购买人数')
     site = models.CharField(max_length=64, help_text='所属团购网站')
     city = models.CharField(max_length=64, help_text='城市')
-    categorie = models.IntegerField(default=0, help_text='商品分类')
+    category = models.IntegerField(default=0, help_text='商品分类')
     rank = models.IntegerField(default=0, help_text='商品等级')
     
     def __unicode__(self):
@@ -39,7 +39,7 @@ class Site(models.Model):
 
 
 # 商品分类
-class Categorie(models.Model):
+class Category(models.Model):
     name = models.CharField(max_length=64) # 分类名称
     
     def __unicode__(self):
@@ -70,6 +70,6 @@ class SiteCity(models.Model):
 
 admin.site.register(Deal, Deal.Admin)
 admin.site.register(Site)
-admin.site.register(Categorie)
+admin.site.register(Category)
 admin.site.register(City)
 admin.site.register(SiteCity)
