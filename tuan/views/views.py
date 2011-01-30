@@ -24,9 +24,7 @@ def tuan_city_category_page(request, city, category, page):
     except ValueError:
         page = DEFAULT_CATEGORY
     if page < PAGE_1ST: page = PAGE_1ST
-        
     count = DEFAULT_COUNT_PER_PAGE
-
     deals = (category == 0) and models.Deal.objects.filter(city=city) or models.Deal.objects.filter(city=city, category=category)
     total = deals.count()
     if total != 0:
@@ -45,6 +43,13 @@ def tuan_city_category_page(request, city, category, page):
                 deal.site_url = site[0].url
         else:
             deal.site_name = ''
+    # 获取城市名称
+    city_name = city
+    city_query = models.City.objects.filter(city=city)
+    if city_query.count() == 1:
+        city_name = city_query[0].name
+    # 获取团购网站列表
+    site = models.Site.objects.all()
     return render_to_response('tuan.html', locals())
 
 def tuan_city_category(request, city, category):

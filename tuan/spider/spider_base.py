@@ -68,7 +68,8 @@ class SpiderBase(SGMLParser):
         self.titles=[]
         self.images=[]
         self.timeleft=[]
-#        self.bought=[]
+        self.bought=[]
+        self.ison=[]
         self.state=StateBase(self)
 
     def zip_info(self):
@@ -94,6 +95,12 @@ class SpiderBase(SGMLParser):
 
     def add_timeleft(self, timeleft):
         self.timeleft.append(timeleft)
+
+    def add_bought(self, bought):
+        self.bought.append(bought)
+
+    def add_ison(self, ison):
+        self.bought.ison(ison)
 
     def change_state(self, new_state):
         self.state.exit()
