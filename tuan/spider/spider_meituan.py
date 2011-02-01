@@ -162,17 +162,22 @@ class StatePPrice(StateBase):
     def start_p(self, attrs):
         c=get_attr(attrs, 'class')
         if c=='deal-price' :
-            self.change_state(self.context.state_strong_price)
+            self.change_state(self.context.state_price)
 
 class StateStrongPrice(StateBase):
+    "unused"
     def start_strong(self, attrs):
         self.change_state(self.context.state_price)
+    def unknown_starttag(self, tag, attrs):
+        self.context.logging.debug('enter strong')
+        if tag == 'strong':
+            self.start_strong(attrs)
 
 class StatePrice(StateBase):
     def handle_data(self, data):
         price=data.strip()[3:]
         self.context.add_price(price)
-        self.change_state(self.context.state_table_value)
+        self.change_state(self.context.state_del_value)
 
 class StateTableValue(StateBase):
     def start_Table(self, attrs):
@@ -383,8 +388,8 @@ class SpiderMeituan(SpiderBase):
 def test_spider():
     import urllib
     urls = [
-#        'http://bj.meituan.com/',
-        'http://sz.meituan.com/',
+        'http://bj.meituan.com/',
+#        'http://sz.meituan.com/',
 #        'http://sh.meituan.com/',
 #        'http://gz.meituan.com/',
 #        'http://cd.meituan.com/',
@@ -401,8 +406,8 @@ def test_spider():
 
 def main():
     #logging.basicConfig(filename='', level=logging.DEBUG)
-    #logging.basicConfig(level=logging.DEBUG)
-    logging.basicConfig(level=logging.ERROR)
+    logging.basicConfig(level=logging.DEBUG)
+    #logging.basicConfig(level=logging.ERROR)
     test_spider()
 
 if __name__ == '__main__':
