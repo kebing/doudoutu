@@ -2,6 +2,7 @@
 # 解析美团网
 #
 
+import logging
 import datetime
 
 import spider_base
@@ -16,34 +17,26 @@ class StateInitial(StateBase):
     def start_div(self, attrs):
         c=get_attr(attrs, 'id')
         if c == 'index-deals':
-            print "index-deals"
             self.change_state(self.context.state_div_goods)
         elif c == 'deal-default':
-            print "deal-default"
             self.change_state(self.context.state_default_goods)
 
 class StateDivGoods(StateBase):
     def start_div(self, attrs):
         c=get_attr(attrs, 'class')
-        print "class: " + c
         if c == 'sidebar':
-            print "sidebar"
             self.change_state(self.context.state_end)
         elif c == 'item' or c == 'item odd':
-            print "item"
             self.change_state(self.context.state_a_title)
         elif c == 'primary cf':
-            print "primary cf"
             self.change_state(self.context.state_primary_a_title)
 
 class StatePrimaryH1Title(StateBase):
     def start_h1(self, attrs):
-        print "h1"
         self.change_state(self.context.state_primary_a_title)
         
 class StatePrimaryATitle(StateBase):
     def start_a(self, attrs):
-        print "a"
         href=get_attr(attrs, 'href')
         self.context.add_url(href)
         self.change_state(self.context.state_primary_data_title)
@@ -51,7 +44,6 @@ class StatePrimaryATitle(StateBase):
 class StatePrimaryDataTitle(StateBase):
     def handle_data(self, data):
         title=data.strip()
-        print title
         self.context.add_title(title)
         self.change_state(self.context.state_primary_p_price)
 
@@ -59,7 +51,6 @@ class StatePrimaryPPrice(StateBase):
     def start_p(self, attrs):
         c=get_attr(attrs, 'class')
         if c=='deal-price' :
-            print "p-class: " + c
             self.change_state(self.context.state_primary_price)
 
 class StatePrimaryStrongPrice(StateBase):
@@ -69,8 +60,8 @@ class StatePrimaryStrongPrice(StateBase):
 
 class StatePrimaryPrice(StateBase):
     def handle_data(self, data):
-        price=data.strip()[3:]
-        print "price: " + price
+        price=data.strip()[2:].strip()
+        self.context.logger.debug('got price ' + price + ' from data ' + data)
         self.context.add_price(price)
         self.change_state(self.context.state_primary_del_value)
 
@@ -78,12 +69,9 @@ class StatePrimaryTableValue(StateBase):
     "unused"
     def start_table(self, attrs):
         c=get_attr(attrs, 'class')
-        print "table_value " + c
         if c == 'discount':
-            print "table_value " + c
             self.change_state(self.context.state_primary_tr_value)
     def start_tr(self, attrs):
-        print "table_value " + c
         self.change_state(self.context.state_primary_tr_value)
 
 class StatePrimaryTrValue(StateBase):
@@ -91,7 +79,6 @@ class StatePrimaryTrValue(StateBase):
     def start_tr(self, attrs):
         c=get_attr(attrs, 'class')
         if c=='number':
-            print "number"
             self.change_state(self.context.state_primary_del_value)
 
 class StatePrimaryDelValue(StateBase):
@@ -100,8 +87,8 @@ class StatePrimaryDelValue(StateBase):
 
 class StatePrimaryValue(StateBase):
     def handle_data(self, data):
-        value=data.strip()[3:]
-        print "value: " + value
+        value=data.strip()[2:].strip()
+        self.context.logger.debug('got value ' + value + ' from data ' + data)
         self.context.add_value(value)
         self.change_state(self.context.state_primary_p_bought)
 
@@ -109,7 +96,6 @@ class StatePrimaryPBought(StateBase):
     def start_p(self, attrs):
         c=get_attr(attrs, 'class')
         if c == 'deal-buy-tip-top':
-            print c
             self.change_state(self.context.state_primary_bought)
 
 class StatePrimaryStrongBought(StateBase):
@@ -120,7 +106,6 @@ class StatePrimaryStrongBought(StateBase):
 class StatePrimaryBought(StateBase):
     def handle_data(self, data):
         bought=data.strip()
-        print "bought: " + bought
         self.context.add_bought(bought)
         self.change_state(self.context.state_primary_div_time_left)
 
@@ -165,7 +150,6 @@ class StateDivImage(StateBase):
     def start_div(self, attrs):
         c=get_attr(attrs, 'class')
         if c == 'cover' :
-            print c
             self.change_state(self.context.state_image)
     
 class StateImage(StateBase):
@@ -335,6 +319,7 @@ class StateDefaultImage(StateBase):
 
 
 class SpiderMeituan(SpiderBase):
+    logger = logging.getLogger('tuan.spider.SpiderMeituan')
     def __init__(self):
         SpiderBase.__init__(self)
         self.state_initial=StateInitial(self)
@@ -397,12 +382,13 @@ class SpiderMeituan(SpiderBase):
 
 def test_spider():
     import urllib
-    urls = ['http://bj.meituan.com/',
-#            'http://sz.meituan.com/',
-#            'http://sh.meituan.com/',
-#            'http://gz.meituan.com/',
-#            'http://cd.meituan.com/',
-#            'http://km.meituan.com/'
+    urls = [
+#        'http://bj.meituan.com/',
+        'http://sz.meituan.com/',
+#        'http://sh.meituan.com/',
+#        'http://gz.meituan.com/',
+#        'http://cd.meituan.com/',
+#        'http://km.meituan.com/',
             ]
     for url in urls:
         usock = urllib.urlopen(url)
@@ -411,10 +397,12 @@ def test_spider():
         spider = SpiderMeituan()
         spider.feed(data)
         spider.close()
-        print url
         print spider
 
 def main():
+    #logging.basicConfig(filename='', level=logging.DEBUG)
+    #logging.basicConfig(level=logging.DEBUG)
+    logging.basicConfig(level=logging.ERROR)
     test_spider()
 
 if __name__ == '__main__':

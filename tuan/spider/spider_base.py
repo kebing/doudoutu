@@ -3,7 +3,7 @@
 from sgmllib import SGMLParser
 import urllib
 import datetime
-
+import logging
 
     
 def get_attr(attrs, name):
@@ -58,8 +58,8 @@ class StateBase():
     def start_a(self, attrs):
         return
 
-
 class SpiderBase(SGMLParser):
+    logger = logging.getLogger('tuan.spider.SpiderBase')
     def __init__(self):
         SGMLParser.__init__(self)
         self.urls=[]
@@ -75,31 +75,36 @@ class SpiderBase(SGMLParser):
     def zip_info(self):
         return zip(self.urls, self.values, self.prices, self.titles, self.images, self.timeleft)
 
-    def add_id(self, id):
-        self.ids.append(id)
-
     def add_url(self, url):
+        self.logger.debug('add_url:'+ url)
         self.urls.append(url)
 
     def add_title(self, title):
+        self.logger.debug('add_title:'+ title)
         self.titles.append(title)
 
     def add_price(self, price):
+        self.logger.debug('add_price:'+ price)
         self.prices.append(price)
 
     def add_value(self, value):
+        self.logger.debug('add_value:'+ value)
         self.values.append(value)
 
     def add_image(self, image):
+        self.logger.debug('add_image:'+ image)
         self.images.append(image)
 
     def add_timeleft(self, timeleft):
+        self.logger.debug('add_timeleft:'+ timeleft)
         self.timeleft.append(timeleft)
 
     def add_bought(self, bought):
+        self.logger.debug('add_bought:'+ bought)
         self.bought.append(bought)
 
     def add_ison(self, ison):
+        self.logger.debug('add_ison:'+ ison)
         self.bought.ison(ison)
 
     def change_state(self, new_state):
@@ -133,9 +138,12 @@ class SpiderBase(SGMLParser):
 
     def __str__(self):
         result=''
-        for url, title, price, value, image, timeleft in self.zip_info():
-            s='%(0), %(1), %(2), %(3), %(4), %(5)\n'
-            result += s % {'0':url, '1':unicode(title,'utf8'), '2':price, '3':value, '4':image, '5':timeleft}
+        for url, value, price, title, image, timeleft in self.zip_info():
+            result += '%(url)s %(value)s %(price)s %(title)s %(image)s %(timeleft)s\n' % {
+                'url':url, 'value':value, 'price':price,
+                'title':title, 'image':image,
+                'timeleft':timeleft,
+                }
         return result
 
 
@@ -193,7 +201,9 @@ class CitySpiderBase(SGMLParser):
     def __str__(self):
         result=''
         for city, name, url in self.zip_info():
-            s='{0}, {1}, {2}, {3}\n'
-            result += s.format(self.site, city, name.encode('utf-8'), url)
+            result += '%(site)s %(city)s %(name)s %(url)s\n' % {
+                'site':self.site, 'city':city,
+                'name':name, 'url':url,
+                }
         return result
 
