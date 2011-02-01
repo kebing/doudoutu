@@ -58,11 +58,12 @@ class StatePrimaryDataTitle(StateBase):
 class StatePrimaryPPrice(StateBase):
     def start_p(self, attrs):
         c=get_attr(attrs, 'class')
-        print "p-class: " + c
         if c=='deal-price' :
-            self.change_state(self.context.state_primary_strong_price)
+            print "p-class: " + c
+            self.change_state(self.context.state_primary_price)
 
 class StatePrimaryStrongPrice(StateBase):
+    "unused"
     def start_strong(self, attrs):
         self.change_state(self.context.state_primary_price)
 
@@ -71,18 +72,26 @@ class StatePrimaryPrice(StateBase):
         price=data.strip()[3:]
         print "price: " + price
         self.context.add_price(price)
-        self.change_state(self.context.state_primary_table_value)
+        self.change_state(self.context.state_primary_del_value)
 
 class StatePrimaryTableValue(StateBase):
-    def start_Table(self, attrs):
+    "unused"
+    def start_table(self, attrs):
         c=get_attr(attrs, 'class')
+        print "table_value " + c
         if c == 'discount':
+            print "table_value " + c
             self.change_state(self.context.state_primary_tr_value)
+    def start_tr(self, attrs):
+        print "table_value " + c
+        self.change_state(self.context.state_primary_tr_value)
 
 class StatePrimaryTrValue(StateBase):
+    "unused"
     def start_tr(self, attrs):
         c=get_attr(attrs, 'class')
         if c=='number':
+            print "number"
             self.change_state(self.context.state_primary_del_value)
 
 class StatePrimaryDelValue(StateBase):
@@ -92,6 +101,7 @@ class StatePrimaryDelValue(StateBase):
 class StatePrimaryValue(StateBase):
     def handle_data(self, data):
         value=data.strip()[3:]
+        print "value: " + value
         self.context.add_value(value)
         self.change_state(self.context.state_primary_p_bought)
 
@@ -99,15 +109,18 @@ class StatePrimaryPBought(StateBase):
     def start_p(self, attrs):
         c=get_attr(attrs, 'class')
         if c == 'deal-buy-tip-top':
-            self.change_state(self.context.state_primary_strong_bought)
+            print c
+            self.change_state(self.context.state_primary_bought)
 
 class StatePrimaryStrongBought(StateBase):
+    "unused"
     def start_strong(self, attrs):
         self.change_state(self.context.state_primary_bought)
 
 class StatePrimaryBought(StateBase):
     def handle_data(self, data):
         bought=data.strip()
+        print "bought: " + bought
         self.context.add_bought(bought)
         self.change_state(self.context.state_primary_div_time_left)
 
@@ -152,6 +165,7 @@ class StateDivImage(StateBase):
     def start_div(self, attrs):
         c=get_attr(attrs, 'class')
         if c == 'cover' :
+            print c
             self.change_state(self.context.state_image)
     
 class StateImage(StateBase):
@@ -336,7 +350,7 @@ class SpiderMeituan(SpiderBase):
         self.state_table_value=StateTableValue(self)
         self.state_del_value=StateDelValue(self)
         self.state_value=StateValue(self)
-        self.state_div_timeleft=StateDivTimeLeft(self)
+        self.state_div_time_left=StateDivTimeLeft(self)
         self.state_p_bought=StatePBought(self)
         self.state_strong_bought=StateStrongBought(self)
         self.state_bought=StateBought(self)
@@ -354,7 +368,7 @@ class SpiderMeituan(SpiderBase):
         self.state_primary_p_bought=StatePrimaryPBought(self)
         self.state_primary_strong_bought=StatePrimaryStrongBought(self)
         self.state_primary_bought=StatePrimaryBought(self)
-        self.state_primary_div_timeleft=StatePrimaryDivTimeLeft(self)
+        self.state_primary_div_time_left=StatePrimaryDivTimeLeft(self)
         self.state_primary_div_image=StatePrimaryDivImage(self)
         self.state_primary_image=StatePrimaryImage(self)
         
@@ -370,7 +384,7 @@ class SpiderMeituan(SpiderBase):
         self.state_default_td_value=StateDefaultTdValue(self)
         self.state_default_del_value=StateDefaultDelValue(self)
         self.state_default_value=StateDefaultValue(self)
-        self.state_default_div_timeleft=StateDefaultDivTimeLeft(self)
+        self.state_default_div_time_left=StateDefaultDivTimeLeft(self)
         self.state_default_p_bought=StateDefaultPBought(self)
         self.state_default_strong_bought=StateDefaultStrongBought(self)
         self.state_default_bought=StateDefaultBought(self)
@@ -384,11 +398,12 @@ class SpiderMeituan(SpiderBase):
 def test_spider():
     import urllib
     urls = ['http://bj.meituan.com/',
-            'http://sz.meituan.com/',
-            'http://sh.meituan.com/',
-            'http://gz.meituan.com/',
-            'http://cd.meituan.com/',
-            'http://km.meituan.com/']
+#            'http://sz.meituan.com/',
+#            'http://sh.meituan.com/',
+#            'http://gz.meituan.com/',
+#            'http://cd.meituan.com/',
+#            'http://km.meituan.com/'
+            ]
     for url in urls:
         usock = urllib.urlopen(url)
         data = usock.read()

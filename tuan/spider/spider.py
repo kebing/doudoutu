@@ -24,7 +24,8 @@ class DealSpider:
                 if deal.value <= 0:
                     deal.rebate = 0
                 else:
-                    deal.rebate = float("{0:.1f}".format(deal.price * 10 / deal.value))
+                    #deal.rebate = float("{0:.1f}".format(deal.price * 10 / deal.value))
+                    deal.rebate = float("%(0).1f" % {'0':deal.price * 10 / deal.value})
                 deal.saving = deal.value - deal.price
                 deal.title = title
                 deal.image = image

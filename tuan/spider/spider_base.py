@@ -16,8 +16,8 @@ def get_attr(attrs, name):
     
 def print_result(spider, site, city, dt, site_url, rank):
     for url, title, price, value, image in zip(spider.urls, spider.titles, spider.prices, spider.values, spider.images):
-        s='{0}, "{1}", {2}, {3}, {4}, {5}, {6}, {7}, {8}, {9}'
-        print s.format(url, title.replace('"', '""'), price, value, site, city, dt, image, site_url, rank)
+        s='%(0), "%(1)", %(2), %(3), %(4), %(5), %(6), %(7), %(8), %(9)'
+        print s % {'0':url, '1':title.encode('utf-8'), '2':price, '3':value, '4':site, '5':city, '6':dt, '7':image, '8':site_url, '9':rank}
 
 
 
@@ -134,8 +134,8 @@ class SpiderBase(SGMLParser):
     def __str__(self):
         result=''
         for url, title, price, value, image, timeleft in self.zip_info():
-            s='{0}, {1}, {2}, {3}, {4}, {5}\n'
-            result += s.format(url, title, price, value, image, timeleft)
+            s='%(0), %(1), %(2), %(3), %(4), %(5)\n'
+            result += s % {'0':url, '1':unicode(title,'utf8'), '2':price, '3':value, '4':image, '5':timeleft}
         return result
 
 
