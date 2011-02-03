@@ -51,10 +51,9 @@ class StatePrimaryPPrice(StateBase):
     def start_p(self, attrs):
         c=get_attr(attrs, 'class')
         if c=='deal-price' :
-            self.change_state(self.context.state_primary_price)
+            self.change_state(self.context.state_primary_strong_price)
 
 class StatePrimaryStrongPrice(StateBase):
-    "unused"
     def start_strong(self, attrs):
         self.change_state(self.context.state_primary_price)
 
@@ -63,19 +62,15 @@ class StatePrimaryPrice(StateBase):
         price=data.strip()[2:].strip()
         self.context.logger.debug('got price ' + price + ' from data ' + data)
         self.context.add_price(price)
-        self.change_state(self.context.state_primary_del_value)
+        self.change_state(self.context.state_primary_table_value)
 
 class StatePrimaryTableValue(StateBase):
-    "unused"
     def start_table(self, attrs):
         c=get_attr(attrs, 'class')
         if c == 'discount':
             self.change_state(self.context.state_primary_tr_value)
-    def start_tr(self, attrs):
-        self.change_state(self.context.state_primary_tr_value)
 
 class StatePrimaryTrValue(StateBase):
-    "unused"
     def start_tr(self, attrs):
         c=get_attr(attrs, 'class')
         if c=='number':
@@ -96,10 +91,9 @@ class StatePrimaryPBought(StateBase):
     def start_p(self, attrs):
         c=get_attr(attrs, 'class')
         if c == 'deal-buy-tip-top':
-            self.change_state(self.context.state_primary_bought)
+            self.change_state(self.context.state_primary_strong_bought)
 
 class StatePrimaryStrongBought(StateBase):
-    "unused"
     def start_strong(self, attrs):
         self.change_state(self.context.state_primary_bought)
 
@@ -162,10 +156,9 @@ class StatePPrice(StateBase):
     def start_p(self, attrs):
         c=get_attr(attrs, 'class')
         if c=='deal-price' :
-            self.change_state(self.context.state_price)
+            self.change_state(self.context.state_strong_price)
 
 class StateStrongPrice(StateBase):
-    "unused"
     def start_strong(self, attrs):
         self.change_state(self.context.state_price)
     def unknown_starttag(self, tag, attrs):
@@ -180,7 +173,7 @@ class StatePrice(StateBase):
         self.change_state(self.context.state_del_value)
 
 class StateTableValue(StateBase):
-    def start_Table(self, attrs):
+    def start_table(self, attrs):
         c=get_attr(attrs, 'class')
         if c == 'discount':
             self.change_state(self.context.state_del_value)
@@ -200,6 +193,7 @@ class StateDivTimeLeft(StateBase):
         c=get_attr(attrs, 'class').split(' ')
         if 'deal-timeleft' in c:
             timeleft=get_attr(attrs, 'diff')
+            self.context.logger.debug('got timeleft ' + timeleft)
             self.context.add_timeleft(timeleft)
             self.change_state(self.context.state_p_bought)
 
@@ -210,7 +204,7 @@ class StatePBought(StateBase):
             self.change_state(self.context.state_strong_bought)
 
 class StateStrongBought(StateBase):
-    def start_p(self, attrs):
+    def start_strong(self, attrs):
         self.change_state(self.context.state_bought)
 
 class StateBought(StateBase):
@@ -253,10 +247,9 @@ class StateDefaultPPrice(StateBase):
     def start_p(self, attrs):
         c=get_attr(attrs, 'class')
         if c=='deal-price' :
-            self.change_state(self.context.state_default_price)
+            self.change_state(self.context.state_default_strong_price)
 
 class StateDefaultStrongPrice(StateBase):
-    "unused"
     def start_strong(self, attrs):
         self.change_state(self.context.state_default_price)
 
@@ -264,11 +257,10 @@ class StateDefaultPrice(StateBase):
     def handle_data(self, data):
         price=data.strip()[2:].strip()
         self.context.add_price(price)
-        self.change_state(self.context.state_default_value)
+        self.change_state(self.context.state_default_table_value)
 
 class StateDefaultTableValue(StateBase):
-    "unused"
-    def start_Table(self, attrs):
+    def start_table(self, attrs):
         c=get_attr(attrs, 'class')
         if c == 'deal-discount':
             self.change_state(self.context.state_default_td_value)
@@ -299,10 +291,9 @@ class StateDefaultPBought(StateBase):
     def start_p(self, attrs):
         c=get_attr(attrs, 'class')
         if c == 'deal-buy-tip-top':
-            self.change_state(self.context.state_default_bought)
+            self.change_state(self.context.state_default_strong_bought)
 
 class StateDefaultStrongBought(StateBase):
-    "unused"
     def start_strong(self, attrs):
         self.change_state(self.context.state_default_bought)
 
@@ -391,11 +382,11 @@ class SpiderMeituan(SpiderBase):
 def test_spider():
     import urllib
     urls = [
-#        'http://bj.meituan.com/',
-#        'http://sz.meituan.com/',
-#        'http://sh.meituan.com/',
-#        'http://gz.meituan.com/',
-#        'http://cd.meituan.com/',
+        'http://bj.meituan.com/',
+        'http://sz.meituan.com/',
+        'http://sh.meituan.com/',
+        'http://gz.meituan.com/',
+        'http://cd.meituan.com/',
         'http://km.meituan.com/',
             ]
     for url in urls:

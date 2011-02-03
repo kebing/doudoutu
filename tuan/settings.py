@@ -58,7 +58,8 @@ MEDIA_URL = ''
 # Examples: "http://foo.com/media/", "/media/".
 ADMIN_MEDIA_PREFIX = '/static/admin/'
 
-PROJECT_ROOT = '/home/hepengfei/doudoutu/tuan/'
+#PROJECT_ROOT = '/home/hepengfei/doudoutu/tuan/'
+PROJECT_ROOT = '/home/kebing/workspace/doudoutu/tuan/'
 STATIC_ROOT = PROJECT_ROOT + 'static/'
 STATIC_URL = '/static/'
 LOG_ROOT = '/tmp/'
