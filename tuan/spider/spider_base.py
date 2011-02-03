@@ -4,6 +4,7 @@ from sgmllib import SGMLParser
 import urllib
 import datetime
 import logging
+import re
 
     
 def get_attr(attrs, name):
@@ -12,7 +13,40 @@ def get_attr(attrs, name):
         return v[0]
     else:
         return ''
+
+
+def parse_first_integer(data):
+    result=re.match(r'^[^0-9]*(?P<n>[-+]?\d+).*$', data)
+    if result is None:
+        return '0'
+    else:
+        n = result.group('n')
+        if n == '':
+            return '0'
+        else:
+            try:
+                a = int(n)
+            except ValueError:
+                n = '0'
+            return n
+
+
+def parse_first_float(data):
+    result=re.match(r'^[^0-9-+]*(?P<n>[-+]?(\d+(\.\d*)?|\.\d+)([eE][-+]?\d+)?)', data)
+    if result is None:
+        return '0.0'
+    else:
+        n = result.group('n')
+        if n == '':
+            return '0.0'
+        else:
+            try:
+                a = float(n)
+            except ValueError:
+                n = '0.0'
+            return n
     
+
 def print_result(spider, site, city, dt, site_url, rank):
     for url, title, price, value, image in zip(spider.urls, spider.titles, spider.prices, spider.values, spider.images):
         s='%(0), "%(1)", %(2), %(3), %(4), %(5), %(6), %(7), %(8), %(9)'
@@ -41,6 +75,8 @@ class StateBase():
     def start_h4(self, attrs):
         return
     def start_h5(self, attrs):
+        return
+    def start_h6(self, attrs):
         return
     def start_p(self, attrs):
         return
@@ -80,10 +116,9 @@ class SpiderBase(SGMLParser):
         self.images=[]
         self.timeleft=[]
         self.bought=[]
-        self.ison=[]
         self.state=StateBase(self)
     def zip_info(self):
-        return zip(self.urls, self.values, self.prices, self.titles, self.images, self.timeleft)
+        return zip(self.urls, self.values, self.prices, self.titles, self.images, self.timeleft, self.bought)
     def add_url(self, url):
         self.logger.debug('add_url:'+ url)
         self.urls.append(url)
@@ -106,8 +141,7 @@ class SpiderBase(SGMLParser):
         self.logger.debug('add_bought:'+ bought)
         self.bought.append(bought)
     def add_ison(self, ison):
-        self.logger.debug('add_ison:'+ ison)
-        self.bought.ison(ison)
+        self.logger.debug('add_ison<not used>:'+ ison)
     def change_state(self, new_state):
         self.state.exit()
         self.state=new_state
@@ -126,6 +160,8 @@ class SpiderBase(SGMLParser):
         self.state.start_h4(attrs)
     def start_h5(self, attrs):
         self.state.start_h5(attrs)
+    def start_h6(self, attrs):
+        self.state.start_h6(attrs)
     def start_p(self, attrs):
         self.state.start_p(attrs)
     def start_span(self, attrs):
@@ -152,14 +188,13 @@ class SpiderBase(SGMLParser):
         self.state.start_dd(attrs)
     def start_strong(self, attrs):
         self.state.start_strong(attrs)
-
     def __str__(self):
         result=''
-        for url, value, price, title, image, timeleft in self.zip_info():
-            result += '%(url)s %(value)s %(price)s %(title)s %(image)s %(timeleft)s\n' % {
+        for url, value, price, title, image, timeleft, bought in self.zip_info():
+            result += '%(url)s %(value)s %(price)s %(title)s %(image)s %(timeleft)s %(bought)s\n' % {
                 'url':url, 'value':value, 'price':price,
                 'title':title, 'image':image,
-                'timeleft':timeleft,
+                'timeleft':timeleft, 'bought':bought,
                 }
         return result
 

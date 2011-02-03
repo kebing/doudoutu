@@ -5,11 +5,7 @@
 import logging
 import datetime
 
-import spider_base
-from spider_base import StateBase
-from spider_base import SpiderBase
-#from spider_base import CitySpiderBase
-from spider_base import get_attr
+from spider_base import *
 import re
 
 
@@ -59,8 +55,8 @@ class StatePrimaryStrongPrice(StateBase):
 
 class StatePrimaryPrice(StateBase):
     def handle_data(self, data):
-        price=data.strip()[2:].strip()
-        self.context.logger.debug('got price ' + price + ' from data ' + data)
+        price=parse_first_float(data.strip())
+        self.context.logger.debug('got price ' + price + ' from data ' + data.strip())
         self.context.add_price(price)
         self.change_state(self.context.state_primary_table_value)
 
@@ -82,7 +78,7 @@ class StatePrimaryDelValue(StateBase):
 
 class StatePrimaryValue(StateBase):
     def handle_data(self, data):
-        value=data.strip()[2:].strip()
+        value=parse_first_float(data.strip())
         self.context.logger.debug('got value ' + value + ' from data ' + data)
         self.context.add_value(value)
         self.change_state(self.context.state_primary_p_bought)
@@ -99,7 +95,7 @@ class StatePrimaryStrongBought(StateBase):
 
 class StatePrimaryBought(StateBase):
     def handle_data(self, data):
-        bought=data.strip()
+        bought=parse_first_integer(data.strip())
         self.context.add_bought(bought)
         self.change_state(self.context.state_primary_div_time_left)
 
@@ -168,7 +164,7 @@ class StateStrongPrice(StateBase):
 
 class StatePrice(StateBase):
     def handle_data(self, data):
-        price=data.strip()[2:].strip()
+        price=parse_first_float(data.strip())
         self.context.add_price(price)
         self.change_state(self.context.state_del_value)
 
@@ -184,7 +180,7 @@ class StateDelValue(StateBase):
 
 class StateValue(StateBase):
     def handle_data(self, data):
-        value=data.strip()[2:].strip()
+        value=parse_first_float(data.strip())
         self.context.add_value(value)
         self.change_state(self.context.state_div_time_left)
 
@@ -209,7 +205,7 @@ class StateStrongBought(StateBase):
 
 class StateBought(StateBase):
     def handle_data(self, data):
-        bought=data.strip()
+        bought=parse_first_integer(data.strip())
         self.context.add_bought(bought)
         self.change_state(self.context.state_div_goods)
 
@@ -255,7 +251,7 @@ class StateDefaultStrongPrice(StateBase):
 
 class StateDefaultPrice(StateBase):
     def handle_data(self, data):
-        price=data.strip()[2:].strip()
+        price=parse_first_float(data.strip())
         self.context.add_price(price)
         self.change_state(self.context.state_default_table_value)
 
@@ -275,7 +271,7 @@ class StateDefaultDelValue(StateBase):
 
 class StateDefaultValue(StateBase):
     def handle_data(self, data):
-        value=data.strip()[2:].strip()
+        value=parse_first_float(data.strip())
         self.context.add_value(value)
         self.change_state(self.context.state_default_div_time_left)
 
@@ -299,7 +295,7 @@ class StateDefaultStrongBought(StateBase):
 
 class StateDefaultBought(StateBase):
     def handle_data(self, data):
-        bought=data.strip()
+        bought=parse_first_integer(data.strip())
         self.context.add_bought(bought)
         self.change_state(self.context.state_default_div_image)
 
@@ -388,7 +384,7 @@ def test_spider():
         'http://gz.meituan.com/',
         'http://cd.meituan.com/',
         'http://km.meituan.com/',
-            ]
+        ]
     for url in urls:
         usock = urllib.urlopen(url)
         data = usock.read()

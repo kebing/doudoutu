@@ -2,15 +2,12 @@
 # 解析拉手网的代码
 #
 
+import logging
 import datetime
 
-import spider_base
-from spider_base import StateBase
-from spider_base import SpiderBase
-from spider_base import CitySpiderBase
-from spider_base import get_attr
+from spider_base import *
 import re
-#from spider import DealSpider
+
 
 class StateInitial(StateBase):
     def start_div(self, attrs):
@@ -28,7 +25,6 @@ class StateDivMid(StateBase):
     def start_a(self, attrs):
         title=get_attr(attrs, 'title')
         href=get_attr(attrs, 'href')
-        #if href[0:27]=='http://www.lashou.com/deal/':
         self.context.add_title(title)
         self.context.add_url(href)
         self.change_state(self.context.state_div_price)
@@ -41,7 +37,9 @@ class StateDivPrice(StateBase):
 
 class StatePrice(StateBase):
     def handle_data(self, data):
-        price=data.strip()[3:]
+        price=parse_first_float(data.strip())
+        self.context.logger.debug('got price ' + price 
+                                  + ' from ' + data.strip())
         self.context.add_price(price)
         self.change_state(self.context.state_h4_value)
 
@@ -73,12 +71,32 @@ class StateDivTimeLeft(StateBase):
 
 class StateTimeleft(StateBase):
     def handle_data(self, data):
-        timeleft=data.strip()
+        timeleft=parse_first_integer(data.strip())
         self.context.add_timeleft(timeleft)
+        self.change_state(self.context.state_div_bought)
+
+class StateDivBought(StateBase):
+    def start_div(self, attrs):
+        c=get_attr(attrs, 'class').split(' ')
+        if 'status' in c:
+            self.change_state(self.context.state_h6_bought)
+
+class StateH6Bought(StateBase):
+    def start_h6(self, attrs):
+        self.change_state(self.context.state_bought)
+
+class StateBought(StateBase):
+    def handle_data(self, data):
+        bought = parse_first_integer(data.strip())
+        self.context.logger.debug('got bought ' + bought
+                                  + ' from ' + data.strip())
+        self.context.add_bought(bought)
         self.change_state(self.context.state_initial)
 
 
+
 class SpiderLashou(SpiderBase):
+    logger = logging.getLogger('tuan.spider.SpiderLashou')
     def __init__(self):
         SpiderBase.__init__(self)
         self.state_initial=StateInitial(self)
@@ -91,6 +109,9 @@ class SpiderLashou(SpiderBase):
         self.state_image=StateImage(self)
         self.state_div_timeleft=StateDivTimeLeft(self)
         self.state_timeleft=StateTimeleft(self)
+        self.state_div_bought=StateDivBought(self)
+        self.state_h6_bought=StateH6Bought(self)
+        self.state_bought=StateBought(self)
         self.state=self.state_initial
 
 class CityStateInitial(StateBase):
@@ -138,22 +159,28 @@ class CitySpiderLashou(CitySpiderBase):
         self.state=self.state_initial
 
 
-# def test_spider():
-#     LashouList = [
-#         ['拉手网', 'shenzhen', 'http://www.lashou.com/shenzhen'],
-#         ['拉手网', 'chengdu', 'http://www.lashou.com/chengdu'],
-#         ['拉手网', 'beijing', 'http://www.lashou.com/beijing'],
-#         ['拉手网', 'shanghai', 'http://www.lashou.com/shanghai']
-#         ];
+def test_spider():
+    import urllib
+    urls = [
+        'http://www.lashou.com/shenzhen',
+        'http://www.lashou.com/chengdu',
+        'http://www.lashou.com/beijing',
+        'http://www.lashou.com/shanghai',
+        ]
+    for url in urls:
+        usock = urllib.urlopen(url)
+        data = usock.read()
+        usock.close()
+        spider = SpiderLashou()
+        spider.feed(data)
+        spider.close()
+        print spider
 
-#     for site,city,site_url in LashouList:
-#         print '<' + city + '>:'
-#         s=SpiderLashou()
-#         ds = DealSpider()
-#         ds.fetch_and_parse(s, site_url)
-#         print s
 
 def main():
+    #logging.basicConfig(filename='', level=logging.DEBUG)
+    logging.basicConfig(level=logging.DEBUG)
+    #logging.basicConfig(level=logging.ERROR)
     test_spider()
 
 if __name__ == '__main__':
