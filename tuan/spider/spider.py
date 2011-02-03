@@ -14,7 +14,7 @@ class DealSpider:
     def store_result(self, spider, site, city):
         grabtime = datetime.datetime.now();
         n = 0
-        for url, value, price, title, image, timeleft in spider.zip_info():
+        for url, value, price, title, image, timeleft, bought in spider.zip_info():
             query=models.Deal.objects.filter(url__iexact=url).filter(city=city)
             if query.count() <= 0:
                 deal = models.Deal()
@@ -31,6 +31,7 @@ class DealSpider:
                 deal.image = image
                 deal.timeleft = timeleft
                 deal.grabtime = grabtime
+                deal.bought = float(bought)
                 deal.site = site
                 deal.category = 0;
                 deal.city = city;
