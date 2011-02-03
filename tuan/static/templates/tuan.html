@@ -2,14 +2,16 @@
 
 {%include "header.html"%}
 
-<div>
+<div class="site_list">
   <h3>团购名站</h3>
   {% for s in site %}
-  <span>
+  <span class="site_item">
     <a title="{{s.name}}" href="{{s.url}}" target="_blank">{{s.name}}</a>
   </span>
   {% endfor %}
 </div>
+
+<br/>
 
 <div>
 <p>
@@ -60,7 +62,7 @@
             　
             {% endif %}
             <a title="{{deal.title}}" href="{{deal.url}}" target="_blank">
-              {{deal.title|truncatewords:"100"}}
+              {{ deal.title }}
           </a></h4>
 	  <p class="p_1"> <span class="site"><a title="{{deal.title}}" href="{{deal.url}}" target="_blank">去看看！</a></span> </p>
 	  <p class="p_2">
