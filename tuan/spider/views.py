@@ -12,7 +12,7 @@ from tuan.spider.spider import DealSpider
 from tuan.spider.spider import CitySpider
 import site_data
 
-def deal_spider(request):
+def deal_spider_site_city(request, site, city):
     """
     """
 
@@ -28,7 +28,15 @@ def deal_spider(request):
 
     response.write(html_header)
 
-    query=models.SiteCity.objects.all()
+    query=None
+    if (site != None) and (city != None):
+        query = models.SiteCity.objects.filter(site=site, city=city)
+    elif (site != None) and (city is None):
+        query = models.SiteCity.objects.filter(site=site)
+    elif (site is None) and (city != None):
+        query = models.SiteCity.objects.filter(city=city)
+    else:
+        query = models.SiteCity.objects.all()
     total = 0
     for sc in query:
         factory=SpiderFactory()
@@ -45,6 +53,14 @@ def deal_spider(request):
 
     return response
 
+def deal_spider_site(request, site):
+    return deal_spider_site_city(request, site, None)
+
+def deal_spider_city(request, city):
+    return deal_spider_site_city(request, None, city)
+
+def deal_spider_all(request):
+    return deal_spider_site_city(request, None, None)
 
 def city_spider(request):
     response = HttpResponse()
