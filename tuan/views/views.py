@@ -27,6 +27,7 @@ def tuan_city_category_page(request, city, category, page):
     if page < PAGE_1ST: page = PAGE_1ST
     count = DEFAULT_COUNT_PER_PAGE
     deals = (category == 0) and models.Deal.objects.filter(city=city) or models.Deal.objects.filter(city=city, category=category)
+    deals.filter(timeleft-(now()-grabtime)>0)
     total = deals.count()
     if total != 0:
         deals = deals[ (page - 1) * count : (page - 1) * count + count]

@@ -3,149 +3,171 @@
 # 
 
 import re
+import logging
+from spider_base import *
 
-import spider_base
-from spider_base import StateBase
-from spider_base import SpiderBase
-from spider_base import get_attr
 
 class StateInitial(StateBase):
     def start_div(self, attrs):
         c=get_attr(attrs, 'class')
-        if c == 'basic_buy_group':
-            self.change_state(self.context.state_div_basic)
+        if c == 'index_tuan_tit':
+            self.change_state(self.context.state_h3_title)
 
-class StateDivBasicBuyGroup(StateBase):
+class StateH3Title(StateBase):
+    def start_h3(self, attrs):
+        self.change_state(self.context.state_span_title)
+
+class StateSpanTitle(StateBase):
+    def start_span(self, attrs):
+        c=get_attr(attrs, 'class')
+        if c == 'c_tx4':
+            self.change_state(self.context.state_title)
+
+class StateTitle(StateBase):
+    def handle_data(self, data):
+        title=data.strip()
+        self.context.add_title(title)
+        self.change_state(self.context.state_div_attr)
+
+class StateDivAttr(StateBase):
     def start_div(self, attrs):
         c=get_attr(attrs, 'class')
-        if c == 'attribute':
-            self.change_state(self.context.state_value)
+        if c == 'index_tuan_attr':
+            self.change_state(self.context.state_span_price)
 
-class StateValue(StateBase):
-    def enter(self):
-        self.state=0
-
-    def exit(self):
-        self.state=0
-
-    def start_p(self, attrs):
-        if self.state==0:
-            c=get_attr(attrs, 'class')
-            if c=='primary_price':
-                self.state=1
-        
-    def start_del(self, attrs):
-        if self.state==1:
-            self.state=2
-
-    def handle_data(self, data):
-        if self.state==2:
-            #print "value: " + data
-            self.context.add_value(data)
-            self.state=0
+class StateSpanPrice(StateBase):
+    def start_span(self, attrs):
+        c=get_attr(attrs, 'class')
+        if c == 'num_price':
             self.change_state(self.context.state_price)
 
 class StatePrice(StateBase):
-    def enter(self):
-        self.state=0
-
-    def exit(self):
-        self.state=0
-
-    def start_p(self, attrs):
-        if self.state==0:
-            c=get_attr(attrs, 'class')
-            if c=='current_price':
-                self.state=1
-        
-    def start_span(self, attrs):
-        if self.state==1:
-            self.state=2
-
     def handle_data(self, data):
-        if self.state==2:
-            #print "price: " + data
-            self.context.add_price(data)
-            self.state=0
-            self.change_state(self.context.state_photo_and_title)
+        price=parse_first_float(data.strip())
+        self.context.add_price(price)
+        self.change_state(self.context.state_p_value)
 
-class StatePhotoAndTitle(StateBase):
+class StatePValue(StateBase):
+    def start_p(self, attrs):
+        c=get_attr(attrs, 'class')
+        if c=='original_price':
+            self.change_state(self.context.state_del_value)
+
+class StateDelValue(StateBase):
+    def start_del(self, attrs):
+        self.change_state(self.context.state_value)
+
+class StateValue(StateBase):
+    def handle_data(self, data):
+        value=parse_first_float(data.strip())
+        self.context.add_value(value)
+        self.change_state(self.context.state_span_bought)
+
+class StateSpanBought(StateBase):
+    def start_span(self, attrs):
+        if get_attr(attrs, 'class') == 'sellCountter':
+            self.change_state(self.context.state_bought)
+
+class StateBought(StateBase):
+    def handle_data(self, data):
+        bought=parse_first_float(data.strip())
+        self.context.add_bought(bought)
+        self.change_state(self.context.state_span_lefttime)
+
+class StateLefttime(StateBase):
     def enter(self):
-        self.state=0
+        self.unit=''
+        self.hour=0
+        self.minute=0
+        self.second=0
 
     def exit(self):
-        self.state=0
+        self.unit=''
+        self.hour=0
+        self.minute=0
+        self.second=0
 
-    def start_div(self, attrs):
-        if self.state==0:
-            c=get_attr(attrs, 'class')
-            if c=='photo':
-                self.state=1
+    def start_span(self, attrs):
+        c=get_attr(attrs,'class')
+        if c == 'hour_num':
+            self.unit='hour'
+        elif c == 'minute_num':
+            self.unit='minute'
+        elif c == 'second_num':
+            self.unit='second'
+        else:
+            self.unit=''
         
+    def handle_data(self, data):
+        value=parse_first_integer(data)
+        if self.unit=='hour':
+            self.hour=value
+        elif self.unit=='minute':
+            self.minute=value
+        elif self.unit=='second':
+            self.second=value
+            lefttime=self.hour*60*60+self.minute*60+self.second
+            self.context.add_timeleft(lefttime)
+            self.change_state(self.context.state_div_image)
+        else:
+            "error"
+
+class StateDivImage(StateBase):
+    def start_div(self, attrs):
+        if get_attr(attrs, 'class')=='index_tuan_photo':
+            self.change_state(self.context.state_image)
+
+class StateImage(StateBase):
     def start_img(self, attrs):
-        if self.state==1:
-            img=get_attr(attrs,'src')
-            title=get_attr(attrs,'alt')
-            if img != '' and title!='':
-                #print "img: " + img
-                #print "title: " + title
-                self.context.add_image(img)
-                self.context.add_title(title)
-                self.state=0
-                self.change_state(self.context.state_url)
-
-
-class StateUrl(StateBase):
-    def enter(self):
-        self.state=0
-
-    def exit(self):
-        self.state=0
-
-    def start_div(self, attrs):
-        if self.state==0:
-            c=get_attr(attrs, 'class')
-            if c=='mod_wrap_v2 share_to_somebody':
-                self.state=1
-        
-    def start_a(self, attrs):
-        if self.state==1:
-            onclick=get_attr(attrs,'onclick')
-            if onclick != '':
-                url='http://tuan.qq.com/' + re.sub(r'\?us=smsg.*$', '', re.sub(r'(^.*http://tuan.qq.com/)', '', onclick))
-                #print "url: " + url
-                self.context.add_url(url)
-                self.state=0
-                self.change_state(self.context.state_initial)
+        img=get_attr(attrs, 'init_src')
+        self.context.add_image(img)
+        self.change_state(self.context.state_initial)
 
 class SpiderQQTuan(SpiderBase):
     def __init__(self):
         SpiderBase.__init__(self)
         self.state_initial=StateInitial(self)
-        self.state_div_basic=StateDivBasicBuyGroup(self)
-        self.state_value=StateValue(self)
+        self.state_h3_title=StateH3Title(self)
+        self.state_span_title=StateSpanTitle(self)
+        self.state_title=StateTitle(self)
+        self.state_div_attr=StateDivAttr(self)
+        self.state_span_price=StateSpanPrice(self)
         self.state_price=StatePrice(self)
-        self.state_photo_and_title=StatePhotoAndTitle(self)
-        self.state_url=StateUrl(self)
+        self.state_p_value=StatePValue(self)
+        self.state_del_value=StateDelValue(self)
+        self.state_value=StateValue(self)
+        self.state_span_bought=StateSpanBought(self)
+        self.state_bought=StateBought(self)
+        self.state_lefttime=StateLefttime(self)
+        self.state_div_image=StateDivImage(self)
+        self.state_image=StateImage(self)
         self.state=self.state_initial
 
-def claw(webs):
-    spider_base.claw(SpiderQQTuan, webs)
-
 def test_spider():
-    QQTuanList = [
-        ['QQ团', 'shenzhen', 'http://tuan.qq.com/shenzhen'],
-        ['QQ团', 'shanghai', 'http://tuan.qq.com/shanghai'],
-        ['QQ团', 'beijing', 'http://tuan.qq.com/beijing'],
-        ['QQ团', 'chongqing', 'http://tuan.qq.com/chongqing'],
-        ['QQ团', 'guangzhou', 'http://tuan.qq.com/guangzhou'],
-        ['QQ团', 'chengdu', 'http://tuan.qq.com/chengdu'],
-        ['QQ团', 'fuzhou', 'http://tuan.qq.com/fuzhou']
+    import urllib
+    urls = [
+        'http://tuan.qq.com/shenzhen',
+        'http://tuan.qq.com/shanghai',
+        'http://tuan.qq.com/beijing',
+        'http://tuan.qq.com/chongqing',
+        'http://tuan.qq.com/guangzhou',
+        'http://tuan.qq.com/chengdu',
+        'http://tuan.qq.com/fuzhou',
         ]
-    claw(QQTuanList)
+    for url in urls:
+        usock = urllib.urlopen(url)
+        data = usock.read()
+        usock.close()
+        spider = SpiderQQTuan()
+        spider.feed(data)
+        spider.close()
+        print spider
 
 
 def main():
+    #logging.basicConfig(filename='', level=logging.DEBUG)
+    logging.basicConfig(level=logging.DEBUG)
+    #logging.basicConfig(level=logging.ERROR)
     test_spider()
 
 if __name__ == '__main__':
