@@ -24,6 +24,7 @@ def deal_spider_site_city(request, site, city):
 
     tpl_fetch = Template('<p>Fetching from {{site}} @ {{city}} : {{url}} ... ')
     tpl_store = Template('{{n}} deals.</p>')
+    tpl_fetch_fail = Template(' fail.</p>')
     tpl_total = Template('<p>总共抓取 {{total}} 条记录</p>')
 
     response.write(html_header)
@@ -42,11 +43,14 @@ def deal_spider_site_city(request, site, city):
         factory=SpiderFactory()
         engine = DealSpider()
         spider = factory.new_deal_spider(sc.site)
-        engine.fetch_and_parse(spider, sc.url)
         response.write(tpl_fetch.render(Context({'url': sc.url, 'site':sc.site, 'city':sc.city})));
-        n = engine.store_result(spider, sc.site, sc.city)
-        response.write(tpl_store.render(Context({'n': n})))
-        total += n
+        ok = engine.fetch_and_parse(spider, sc.url)
+        if ok:
+            n = engine.store_result(spider, sc.site, sc.city)
+            response.write(tpl_store.render(Context({'n': n})))
+            total += n
+        else:
+            response.write(tpl_fetch_fail.render(Context({})))
     response.write(tpl_total.render(Context({'total':total})))
 
     response.write(html_footer)

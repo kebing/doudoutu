@@ -72,7 +72,7 @@ class StateDivTimeLeft(StateBase):
 class StateTimeleft(StateBase):
     def handle_data(self, data):
         timeleft=parse_first_integer(data.strip())
-        self.context.add_timeleft(timeleft)
+        self.context.add_time_end_by_timeleft(timeleft)
         self.change_state(self.context.state_div_bought)
 
 class StateDivBought(StateBase):
@@ -168,13 +168,11 @@ def test_spider():
         'http://www.lashou.com/shanghai',
         ]
     for url in urls:
-        usock = urllib.urlopen(url)
-        data = usock.read()
-        usock.close()
         spider = SpiderLashou()
-        spider.feed(data)
-        spider.close()
-        print spider
+        if fetch_and_parse(spider, url):
+            print spider
+        else:
+            print "fetch fail! url = " + url
 
 
 def main():

@@ -6,6 +6,20 @@ import datetime
 import logging
 import re
 
+def fetch_and_parse(spider, url):
+    """
+    抓取成功返回True，出错返回False。
+    """
+    try:
+        usock = urllib.urlopen(url)
+        data = usock.read()
+        usock.close()
+        spider.feed(data)
+        spider.close()
+        return True
+    except IOError:
+        return False
+
     
 def get_attr(attrs, name):
     v=[v for k,v in attrs if k==name]
@@ -47,10 +61,6 @@ def parse_first_float(data):
             return n
     
 
-def print_result(spider, site, city, dt, site_url, rank):
-    for url, title, price, value, image in zip(spider.urls, spider.titles, spider.prices, spider.values, spider.images):
-        s='%(0), "%(1)", %(2), %(3), %(4), %(5), %(6), %(7), %(8), %(9)'
-        print s % {'0':url, '1':title.encode('utf-8'), '2':price, '3':value, '4':site, '5':city, '6':dt, '7':image, '8':site_url, '9':rank}
 
 class StateBase():
     logger = logging.getLogger('tuan.spider.StateBase')
@@ -114,11 +124,11 @@ class SpiderBase(SGMLParser):
         self.prices=[]
         self.titles=[]
         self.images=[]
-        self.timeleft=[]
+        self.time_end=[]
         self.bought=[]
         self.state=StateBase(self)
     def zip_info(self):
-        return zip(self.urls, self.values, self.prices, self.titles, self.images, self.timeleft, self.bought)
+        return zip(self.urls, self.values, self.prices, self.titles, self.images, self.time_end, self.bought)
     def add_url(self, url):
         self.logger.debug('add_url:'+ url)
         self.urls.append(url)
@@ -134,9 +144,12 @@ class SpiderBase(SGMLParser):
     def add_image(self, image):
         self.logger.debug('add_image:'+ image)
         self.images.append(image)
-    def add_timeleft(self, timeleft):
-        self.logger.debug('add_timeleft:'+ timeleft)
-        self.timeleft.append(timeleft)
+    def add_time_end_by_timeleft(self, timeleft):
+        self.add_time_end(datetime.datetime.now() +
+                          datetime.timedelta(seconds=int(timeleft)))
+    def add_time_end(self, time_end):
+        self.logger.debug('add_time_end:'+ str(time_end))
+        self.time_end.append(time_end)
     def add_bought(self, bought):
         self.logger.debug('add_bought:'+ bought)
         self.bought.append(bought)
@@ -190,11 +203,11 @@ class SpiderBase(SGMLParser):
         self.state.start_strong(attrs)
     def __str__(self):
         result=''
-        for url, value, price, title, image, timeleft, bought in self.zip_info():
-            result += '%(url)s %(value)s %(price)s %(title)s %(image)s %(timeleft)s %(bought)s\n' % {
+        for url, value, price, title, image, time_end, bought in self.zip_info():
+            result += '%(url)s %(value)s %(price)s %(title)s %(image)s %(time_end)s %(bought)s\n' % {
                 'url':url, 'value':value, 'price':price,
                 'title':title, 'image':image,
-                'timeleft':timeleft, 'bought':bought,
+                'time_end':time_end, 'bought':bought,
                 }
         return result
 

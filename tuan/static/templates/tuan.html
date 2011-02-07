@@ -71,7 +71,7 @@
             <span>节省：<em class="saving">¥{{deal.saving}}</em></span>
             <span>折扣：<em class="rebate">{{deal.rebate}}折</em></span>
           </p>
-	  <p class="p_3">共有{{deal.bought}} 人购买。剩余时间：{{deal.timeleft}} 秒，抓取时间： {{deal.grabtime}}<div class="timeleft" id="timeleft_counter" timeleft="{{deal.timeleft}}" timebegin="{{deal.grabtime}}"><!-- show(timeleft-(now()-grabtime))--> </div></p>
+	  <p class="p_3">共有{{deal.bought}} 人购买。剩余时间：{{deal.time_end|timeuntil}}，抓取时间： {{deal.grabtime}}<div class="timeleft" id="timeleft_counter" timeleft="{{deal.timeleft}}" timebegin="{{deal.grabtime}}"><!-- show(timeleft-(now()-grabtime))--> </div></p>
 	</div>
 
       </div>

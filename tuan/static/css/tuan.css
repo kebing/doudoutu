@@ -31,7 +31,7 @@ ul, ol {
 
 .list
 {
-    width: 740px;
+    width: 758px;
 }
 
 .list li
@@ -75,7 +75,7 @@ ul, ol {
     margin-left: 15px;
     background-color: transparent;
     font-size: 12px;
-    width: 430px;
+    width: 450px;
 }
 
 .deal .info h4
@@ -130,7 +130,7 @@ ul, ol {
 {
     display:inline;
     float:left;
-    width:98px;
+    width:108px;
 }
 
 .deal .info .p_2 em

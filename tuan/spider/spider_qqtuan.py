@@ -61,18 +61,32 @@ class StateValue(StateBase):
     def handle_data(self, data):
         value=parse_first_float(data.strip())
         self.context.add_value(value)
-        self.change_state(self.context.state_span_bought)
+        self.change_state(self.context.state_url)
+
+class StateUrl(StateBase):
+    def start_a(self, attrs):
+        if get_attr(attrs,'id')=='v:buy_button':
+            buy_href=get_attr(attrs,'href')
+            show_href=buy_href.replace('buy', 'show')
+            url_prefix='http://tuan.qq.com'
+            ch='/'
+            if show_href[0] == '/':
+                ch=''
+            url = url_prefix + ch + show_href
+            self.context.add_url(url)
+            self.change_state(self.context.state_span_bought)
+                
 
 class StateSpanBought(StateBase):
     def start_span(self, attrs):
-        if get_attr(attrs, 'class') == 'sellCountter':
+        if get_attr(attrs, 'id') == 'sellCountter':
             self.change_state(self.context.state_bought)
 
 class StateBought(StateBase):
     def handle_data(self, data):
         bought=parse_first_float(data.strip())
         self.context.add_bought(bought)
-        self.change_state(self.context.state_span_lefttime)
+        self.change_state(self.context.state_lefttime)
 
 class StateLefttime(StateBase):
     def enter(self):
@@ -88,6 +102,7 @@ class StateLefttime(StateBase):
         self.second=0
 
     def start_span(self, attrs):
+        self.unit=''
         c=get_attr(attrs,'class')
         if c == 'hour_num':
             self.unit='hour'
@@ -99,18 +114,20 @@ class StateLefttime(StateBase):
             self.unit=''
         
     def handle_data(self, data):
-        value=parse_first_integer(data)
-        if self.unit=='hour':
+        unit = self.unit
+        self.unit = ''
+        value=int(parse_first_integer(data))
+        if unit=='hour':
             self.hour=value
-        elif self.unit=='minute':
+        elif unit=='minute':
             self.minute=value
-        elif self.unit=='second':
+        elif unit=='second':
             self.second=value
             lefttime=self.hour*60*60+self.minute*60+self.second
-            self.context.add_timeleft(lefttime)
+            self.context.add_time_end_by_timeleft(str(lefttime))
             self.change_state(self.context.state_div_image)
         else:
-            "error"
+            self.context.logger.debug('skip,unit='+ unit +', value:'+data)
 
 class StateDivImage(StateBase):
     def start_div(self, attrs):
@@ -124,6 +141,7 @@ class StateImage(StateBase):
         self.change_state(self.context.state_initial)
 
 class SpiderQQTuan(SpiderBase):
+    logger = logging.getLogger('tuan.spider.SpiderQQTuan')
     def __init__(self):
         SpiderBase.__init__(self)
         self.state_initial=StateInitial(self)
@@ -136,6 +154,7 @@ class SpiderQQTuan(SpiderBase):
         self.state_p_value=StatePValue(self)
         self.state_del_value=StateDelValue(self)
         self.state_value=StateValue(self)
+        self.state_url=StateUrl(self)
         self.state_span_bought=StateSpanBought(self)
         self.state_bought=StateBought(self)
         self.state_lefttime=StateLefttime(self)
@@ -147,21 +166,19 @@ def test_spider():
     import urllib
     urls = [
         'http://tuan.qq.com/shenzhen',
-        'http://tuan.qq.com/shanghai',
-        'http://tuan.qq.com/beijing',
-        'http://tuan.qq.com/chongqing',
-        'http://tuan.qq.com/guangzhou',
-        'http://tuan.qq.com/chengdu',
-        'http://tuan.qq.com/fuzhou',
+#        'http://tuan.qq.com/shanghai',
+#        'http://tuan.qq.com/beijing',
+#        'http://tuan.qq.com/chongqing',
+#        'http://tuan.qq.com/guangzhou',
+#        'http://tuan.qq.com/chengdu',
+#        'http://tuan.qq.com/fuzhou',
         ]
     for url in urls:
-        usock = urllib.urlopen(url)
-        data = usock.read()
-        usock.close()
         spider = SpiderQQTuan()
-        spider.feed(data)
-        spider.close()
-        print spider
+        if fetch_and_parse(spider, url):
+            print spider
+        else:
+            print "fetch fail! url = " + url
 
 
 def main():

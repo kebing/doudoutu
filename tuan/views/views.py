@@ -1,5 +1,6 @@
 # -*-coding:utf-8-*-
 
+import datetime
 from django.shortcuts import render_to_response
 
 from tuan.models import models
@@ -26,8 +27,12 @@ def tuan_city_category_page(request, city, category, page):
         page = DEFAULT_CATEGORY
     if page < PAGE_1ST: page = PAGE_1ST
     count = DEFAULT_COUNT_PER_PAGE
-    deals = (category == 0) and models.Deal.objects.filter(city=city) or models.Deal.objects.filter(city=city, category=category)
-    deals.filter(timeleft-(now()-grabtime)>0)
+    deals = None
+    if category == 0:
+        deals = models.Deal.objects.filter(city=city)
+    else:
+        deals = models.Deal.objects.filter(city=city, category=category)
+    deals = deals.filter(time_end__gte=datetime.datetime.now()).order_by('-rank')
     total = deals.count()
     if total != 0:
         deals = deals[ (page - 1) * count : (page - 1) * count + count]

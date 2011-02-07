@@ -104,7 +104,7 @@ class StatePrimaryDivTimeLeft(StateBase):
         c=get_attr(attrs, 'class').split(' ')
         if 'deal-timeleft' in c:
             timeleft=get_attr(attrs, 'diff')
-            self.context.add_timeleft(timeleft)
+            self.context.add_time_end_by_timeleft(timeleft)
             self.change_state(self.context.state_primary_div_image)
 
 class StatePrimaryDivImage(StateBase):
@@ -190,7 +190,7 @@ class StateDivTimeLeft(StateBase):
         if 'deal-timeleft' in c:
             timeleft=get_attr(attrs, 'diff')
             self.context.logger.debug('got timeleft ' + timeleft)
-            self.context.add_timeleft(timeleft)
+            self.context.add_time_end_by_timeleft(timeleft)
             self.change_state(self.context.state_p_bought)
 
 class StatePBought(StateBase):
@@ -280,7 +280,7 @@ class StateDefaultDivTimeLeft(StateBase):
         c=get_attr(attrs, 'class').split(' ')
         if 'deal-timeleft' in c:
             timeleft=get_attr(attrs, 'diff')
-            self.context.add_timeleft(timeleft)
+            self.context.add_time_end_by_timeleft(timeleft)
             self.change_state(self.context.state_default_p_bought)
 
 class StateDefaultPBought(StateBase):
@@ -386,14 +386,11 @@ def test_spider():
         'http://km.meituan.com/',
         ]
     for url in urls:
-        usock = urllib.urlopen(url)
-        data = usock.read()
-        usock.close()
         spider = SpiderMeituan()
-        spider.feed(data)
-        spider.close()
-        print spider
-
+        if fetch_and_parse(spider, url):
+            print spider
+        else:
+            print "fetch fail! url = " + url
 def main():
     #logging.basicConfig(filename='', level=logging.DEBUG)
     #logging.basicConfig(level=logging.DEBUG)

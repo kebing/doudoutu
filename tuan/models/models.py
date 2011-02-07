@@ -13,8 +13,9 @@ class Deal(models.Model):
     saving = models.FloatField()
     title = models.CharField(max_length=1024) # 标题
     image = models.CharField(max_length=1024) # 图片URL
-    timeleft = models.IntegerField(help_text='商品剩余时间（秒）')
-    grabtime = models.DateTimeField(help_text='抓取时间')
+    time_end = models.DateTimeField(help_text='商品结束时间')
+    grabtime = models.DateTimeField(help_text='信息抓取时间')
+    updatetime = models.DateTimeField(help_text='信息更新时间')
     bought = models.IntegerField(default=0, help_text='已购买人数')
     site = models.CharField(max_length=64, help_text='所属团购网站')
     city = models.CharField(max_length=64, help_text='城市')

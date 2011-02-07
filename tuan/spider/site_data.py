@@ -2,10 +2,12 @@
 
 import spider_lashou
 import spider_meituan
+import spider_qqtuan
 
 site_spider_map = {
     'lashou' : [spider_lashou.SpiderLashou],
     'meituan' : [spider_meituan.SpiderMeituan],
+    'qqtuan' : [spider_qqtuan.SpiderQQTuan]
     }
 
 
@@ -51,6 +53,7 @@ city_list = {
 site_list = {
     'lashou' : ['拉手网', 'http://www.lashou.com', 100],
     'meituan' : ['美团', 'http://www.meituan.com', 99],
+    'qqtuan' : ['QQ团', 'http://tuan.qq.com', 98],
     }
 
 site_city_list = {
@@ -125,6 +128,42 @@ site_city_list = {
     'meituan-baoding' : ['meituan', 'baoding', '美团-保定', 'http://www.meituan.com/baoding'],
     'meituan-shaoxing' : ['meituan', 'shaoxing', '美团-绍兴', 'http://www.meituan.com/shaoxing'],
     'meituan-changchun' : ['meituan', 'changchun', '美团-长春', 'http://www.meituan.com/changchun'],
+
+
+    'qqtuan-beijing' : ['qqtuan', 'beijing', 'QQ团-北京', 'http://tuan.qq.com/beijing'],
+    'qqtuan-shanghai' : ['qqtuan', 'shanghai', 'QQ团-上海', 'http://tuan.qq.com/shanghai'],
+    'qqtuan-guangzhou' : ['qqtuan', 'guangzhou', 'QQ团-广州', 'http://tuan.qq.com/guangzhou'],
+    'qqtuan-shenzhen' : ['qqtuan', 'shenzhen', 'QQ团-深圳', 'http://tuan.qq.com/shenzhen'],
+    'qqtuan-wuhan' : ['qqtuan', 'wuhan', 'QQ团-武汉', 'http://tuan.qq.com/wuhan'],
+    'qqtuan-hangzhou' : ['qqtuan', 'hangzhou', 'QQ团-杭州', 'http://tuan.qq.com/hangzhou'],
+    'qqtuan-tianjin' : ['qqtuan', 'tianjin', 'QQ团-天津', 'http://tuan.qq.com/tianjin'],
+    'qqtuan-nanjing' : ['qqtuan', 'nanjing', 'QQ团-南京', 'http://tuan.qq.com/nanjing'],
+    'qqtuan-chengdu' : ['qqtuan', 'chengdu', 'QQ团-成都', 'http://tuan.qq.com/chengdu'],
+    'qqtuan-chongqing' : ['qqtuan', 'chongqing', 'QQ团-重庆', 'http://tuan.qq.com/chongqing'],
+    'qqtuan-shenyang' : ['qqtuan', 'shenyang', 'QQ团-沈阳', 'http://tuan.qq.com/shenyang'],
+    'qqtuan-suzhou' : ['qqtuan', 'suzhou', 'QQ团-苏州', 'http://tuan.qq.com/suzhou'],
+    'qqtuan-wuxi' : ['qqtuan', 'wuxi', 'QQ团-无锡', 'http://tuan.qq.com/wuxi'],
+    'qqtuan-xian' : ['qqtuan', 'xian', 'QQ团-西安', 'http://tuan.qq.com/xian'],
+    'qqtuan-zhengzhou' : ['qqtuan', 'zhengzhou', 'QQ团-郑州', 'http://tuan.qq.com/zhengzhou'],
+    'qqtuan-dalian' : ['qqtuan', 'dalian', 'QQ团-大连', 'http://tuan.qq.com/dalian'],
+    'qqtuan-qingdao' : ['qqtuan', 'qingdao', 'QQ团-青岛', 'http://tuan.qq.com/qingdao'],
+    'qqtuan-changsha' : ['qqtuan', 'changsha', 'QQ团-长沙', 'http://tuan.qq.com/changsha'],
+    'qqtuan-hefei' : ['qqtuan', 'hefei', 'QQ团-合肥', 'http://tuan.qq.com/hefei'],
+    'qqtuan-taiyuan' : ['qqtuan', 'taiyuan', 'QQ团-太原', 'http://tuan.qq.com/taiyuan'],
+    'qqtuan-fuzhou' : ['qqtuan', 'fuzhou', 'QQ团-福州', 'http://tuan.qq.com/fuzhou'],
+    'qqtuan-kunming' : ['qqtuan', 'kunming', 'QQ团-昆明', 'http://tuan.qq.com/kunming'],
+    'qqtuan-shijiazhuang' : ['qqtuan', 'shijiazhuang', 'QQ团-石家庄', 'http://tuan.qq.com/shijiazhuang'],
+    'qqtuan-jinan' : ['qqtuan', 'jinan', 'QQ团-济南', 'http://tuan.qq.com/jinan'],
+    'qqtuan-xiamen' : ['qqtuan', 'xiamen', 'QQ团-厦门', 'http://tuan.qq.com/xiamen'],
+    'qqtuan-langfang' : ['qqtuan', 'langfang', 'QQ团-廊坊', 'http://tuan.qq.com/langfang'],
+    'qqtuan-nanchang' : ['qqtuan', 'nanchang', 'QQ团-南昌', 'http://tuan.qq.com/nanchang'],
+    'qqtuan-fushun' : ['qqtuan', 'fushun', 'QQ团-抚顺', 'http://tuan.qq.com/fushun'],
+    'qqtuan-ningbo' : ['qqtuan', 'ningbo', 'QQ团-宁波', 'http://tuan.qq.com/ningbo'],
+    'qqtuan-changzhou' : ['qqtuan', 'changzhou', 'QQ团-常州', 'http://tuan.qq.com/changzhou'],
+    'qqtuan-haerbin' : ['qqtuan', 'haerbin', 'QQ团-哈尔滨', 'http://tuan.qq.com/haerbin'],
+    'qqtuan-baoding' : ['qqtuan', 'baoding', 'QQ团-保定', 'http://tuan.qq.com/baoding'],
+    'qqtuan-shaoxing' : ['qqtuan', 'shaoxing', 'QQ团-绍兴', 'http://tuan.qq.com/shaoxing'],
+    'qqtuan-changchun' : ['qqtuan', 'changchun', 'QQ团-长春', 'http://tuan.qq.com/changchun'],
 
     }
 
