@@ -25,6 +25,8 @@
 
 {% include "page_nav.html" %}
 
+<br/>
+
 <div class="deallist">
 
   {% if deals|length == 0 %}
@@ -33,17 +35,12 @@
 
   {% else %}
 
-  <ul class="list">
+  <div class="list">
     
 
     {%for deal in deals%}
 
-    <li>
       <div class="deal">
-        
-        <!-- 区域：商品ID 
-        <div class="id">{{deal.id}}</div>
--->
         <!-- 区域：商品图片 -->
         <div class="image">
           <a title="{{deal.title}}"
@@ -75,15 +72,16 @@
 	</div>
 
       </div>
-    </li>
 
     {%endfor%}
 
-  </ul>
+  </div>
 
   {% endif %}
 
 </div>
+
+<div></div>
 
 {% include "page_nav.html" %}
 

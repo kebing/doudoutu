@@ -5,7 +5,7 @@ from django.shortcuts import render_to_response
 
 from tuan.models import models
 
-DEFAULT_COUNT_PER_PAGE = 5
+DEFAULT_COUNT_PER_PAGE = 30
 PAGE_BAD = 0
 PAGE_1ST = 1
 DEFAULT_PAGE = PAGE_1ST
@@ -68,17 +68,6 @@ def tuan_city_category(request, city, category):
 
 def tuan_city_page(request, city, page):
     return tuan_city_category_page(request, city, DEFAULT_CATEGORY, page)
-    # try:
-    #     page = int(page)
-    # except ValueError:
-    #     page = 1
-    # count=DEFAULT_COUNT_PER_PAGE
-    # if page < 1:
-    #     page = 1
-    # deals = models.Deal.objects.filter(city=city)
-    # total = deals.count()
-    # deals = deals[ (page - 1) * count : (page - 1) * count + count ]
-    # return render_to_response('tuan.html', {'deals': deals,'city':city,'page':page,'total':total})
 
 def tuan_city(request, city):
     return tuan_city_page(request, city, DEFAULT_PAGE)

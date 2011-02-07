@@ -1,9 +1,9 @@
-
+/* -*-coding:utf-8-*- */
 
 
 body {
-color:#3E3E3E;
-font:12px/20px Verdana,Arial;
+    color:#3E3E3E;
+    font:12px/20px Verdana,Arial;
 }
 
 div, ul, ol, li, , h1, h2, h3, h4, h5, h6, p
@@ -19,19 +19,16 @@ fieldset, img, button, input
 
 .deallist
 {
-    padding: 10px;
     margin: 0;
-//    background-color: #DDEDCC;
-    border-width: 10px;
+    background-color: #DDEDCC;
 }
 
 ul, ol {
     list-style:none outside none;
 }
-
 .list
 {
-    width: 758px;
+//    width: 758px;
 }
 
 .list li
@@ -44,14 +41,14 @@ ul, ol {
 }
 
 
+.deal
+{
+    width: 758px;
+}
+
 .deal a:link, a:visited
 {
     text-decoration:none;
-}
-
-.deal .id
-{
-    display: none;
 }
 
 .deal .image
