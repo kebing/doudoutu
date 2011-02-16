@@ -2,25 +2,42 @@
 <html>
   <head>
     <meta http-equiv="content-type" content="text/html; charset=utf-8">
-    <title>IP地址信息查询</title>
+    <title>IP信息查询</title>
+
+    <style type="text/css"><!--{% include "ipinfo.css" %}--></style>
+    <script language="javascript"><!--{% include "ipinfo.js" %}--></script>
+
   </head>
 
   <body>
 
-    <div class="ipinfo_title">
-      <h1>您查询的IP：{{ ip_string }} : {{ ip_value }}</h1>
-    </div>
+    {% include "header.html" %}
+
+    <h2>IP信息查询</h2>
 
     <div class="ipinfo_data">
+      <h3>您查询的IP：{{ ip_string }}</h3> <!-- 十进制： {{ ip_value }} -->
       <ul>
         {% for info in ip_infos %}
         <li>参考数据： {{info.province}} {{info.city}} {{info.isp}}</li>
         {% empty %}
         <li>抱歉，查无果。</li>
         {% endfor %}
-
+        
         <!-- TODO: 修正结果入口 -->
       </ul>
+    </div>
+    
+    <div class="query_box">
+      <h3>请在下面输入您要查询的IP地址</h3>
+      IP地址：
+      <input type="text" id="query_box_ip" onmouseover="this.select();" maxlength="16"/>
+      <a href="#" onclick="return check_and_go(this);">查询</a>
+      <div id="query_box_error_msg" class="error_msg"></div>
+      <br/>
+      <div class="ip_client">
+        您的IP地址是：{{ ip_client_string }}，<a href="/ip/{{ip_client_string}}">点此直接查询</a>
+      </div>
     </div>
 
   </body>
