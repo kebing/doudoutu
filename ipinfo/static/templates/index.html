@@ -1,0 +1,31 @@
+<!doctype html>
+<html>
+  <head>
+    <meta http-equiv="content-type" content="text/html; charset=utf-8">
+    <title>IP地址信息查询</title>
+
+    <script type="text/javascript" src="/static/js/index.js?v1.0.0"></script>
+
+    <script language="javascript">
+      <!--
+        -->
+    </script>
+
+  </head>
+
+  <body>
+
+    <div class="info_title">
+      <h1>您的IP地址是：{{ ip_string }} : {{ ip_value }}</h1>
+    </div>
+
+    <div class="query_box">
+      <form name="query_box_ip">
+        IP地址：
+        <input type="text" name="ip" size="16" value="{{ip_string}}"/>
+        <a href="#" onclick="return check_and_go(this);">查询</a>
+      </form>
+    </div>
+
+  </body>
+</html>
