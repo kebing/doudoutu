@@ -6,13 +6,13 @@ from django.contrib import admin
 
 # 团购商品的信息
 class Deal(models.Model):
-    url = models.CharField(max_length=1024) # 商品URL
+    url = models.TextField() # 商品URL
     value = models.FloatField()             # 原价
     price = models.FloatField()             # 现价
     rebate = models.FloatField()            # 折扣
     saving = models.FloatField()
-    title = models.CharField(max_length=1024) # 标题
-    image = models.CharField(max_length=1024) # 图片URL
+    title = models.TextField() # 标题
+    image = models.TextField() # 图片URL
     time_end = models.DateTimeField(help_text='商品结束时间')
     grabtime = models.DateTimeField(help_text='信息抓取时间')
     updatetime = models.DateTimeField(help_text='信息更新时间')
@@ -31,7 +31,7 @@ class Deal(models.Model):
 class Site(models.Model):
     site = models.CharField(primary_key=True, max_length=64) # 网站
     name = models.CharField(max_length=64) # 网站名称
-    url = models.CharField(max_length=1024)  # 网站URL
+    url = models.TextField()  # 网站URL
     rank = models.IntegerField(default=0, help_text='网站等级')
     def __unicode__(self):
         return self.name
@@ -60,7 +60,7 @@ class SiteCity(models.Model):
     site = models.CharField(max_length=64)
     city = models.CharField(max_length=64)
     name = models.CharField(max_length=64)
-    url = models.CharField(max_length=1024) # 团购网站子城市URL
+    url = models.TextField() # 团购网站子城市URL
     grabtime = models.DateTimeField(help_text='抓取时间')
     def __unicode__(self):
         return self.name
