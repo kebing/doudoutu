@@ -3,6 +3,7 @@
   <head>
     <meta http-equiv="content-type" content="text/html; charset=utf-8">
     <title>IP地址查询</title>
+    <style type="text/css"><!--{% include "ipinfo.css" %}--></style>
   </head>
 
   <body>
@@ -56,11 +57,11 @@
 
     <p/>
 
-    {% if old_query_history != None %}
+    {% if new_query_history != None %}
     <div class="query_history">
       <!--h4>您的历史查询记录</h4> <a href='#' onclick=''>清空</a-->
       <!--ul>
-        {% for ip,loc in old_query_history %}
+        {% for ip,loc in new_query_history %}
         <li>{{ ip }} {{ loc|default:'无结果' }}</li>
         {% endfor %}
       </ul-->
@@ -69,7 +70,7 @@
         <thead>
           <tr><th>IP</th><th>信息</th></tr>
         </thead>
-        {% for ip,loc in old_query_history %}
+        {% for ip,loc in new_query_history %}
         <tr>
           <td>{{ ip }}</td>
           <td>{{ loc|default:'无' }}</td>
@@ -81,7 +82,6 @@
 
     {% include "footer.html" %}
 
-    <style type="text/css"><!--{% include "ipinfo.css" %}--></style>
     <script language="javascript"><!--{% include "ipinfo.js" %}--></script>
 
   </body>

@@ -1,0 +1,124 @@
+/* -*-coding:utf-8-*- */
+
+body
+{
+    font-family: Arial,Helvetica,sans-serif;
+    font-size: 14px;
+}
+
+/* --- header section --- */
+
+.header 
+{
+    padding: 3px 8px 0;
+    margin:0 auto;              /*居中作用*/
+    height: 18px;
+    border-bottom: 1px solid #C9D7F1;
+    font-size: 13px;
+    width: 75%;
+}
+
+.header .left
+{
+    float: left;
+}
+
+.header .right
+{
+    float: right;
+    text-align: right;
+}
+
+h2
+{
+    text-align: center;
+}
+
+.footer
+{
+    margin-top: 50px;
+    text-align: center;
+    font-size: 12px;
+}
+
+/* 查询结果信息区 */
+
+.ipinfo_data
+{
+    /* width: 500px; */
+    /* margin: auto; */
+    color: green;
+    /* background: #C9D7F1; */
+    text-align: center;
+}
+
+.ipinfo_data table
+{
+    margin-left: auto;
+    margin-right: auto;
+    text-align: left;
+    font-size: 16px;
+}
+
+.ipinfo_data table caption
+{
+    font-size: 20px;
+}
+
+
+/* 查询输入区 */
+
+.query_box
+{
+    /* margin: auto; */
+    /* width: 50%; */
+    /*background: #C9D7F1;*/
+    text-align: center;
+}
+
+.query_box a
+{
+}
+
+.query_box input
+{
+    width: 200px;
+    height: 26px;
+    font-size: 20px;
+    font-weight: 700;
+    background: none repeat scroll 0 0 #FFFAC5;
+    border: 2px solid #FFAF05;
+}
+
+.query_box .error_msg
+{
+    color: red;
+    font-size: 13px;
+}
+
+.query_box .ip_client
+{
+    font-size: 13px;
+}
+
+/* 查询历史区 */
+
+.query_history
+{
+    /*background: #C9D7F1;*/
+    text-align: center;
+}
+
+.query_history table
+{
+    margin-left: auto;
+    margin-right: auto;
+    text-align: left;
+}
+
+.query_history table th
+{
+    text-align: center;
+}
+
+

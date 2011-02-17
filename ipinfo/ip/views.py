@@ -105,4 +105,5 @@ def default(request):
             old_query_history = jsonlib.read(old_query_history)
         except jsonlib.ReadError:
             old_query_history = []
+    new_query_history = old_query_history
     return render_to_response('ipinfo.html', locals())
