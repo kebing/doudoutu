@@ -6,7 +6,7 @@ from django.contrib import admin
 admin.autodiscover()
 
 urlpatterns = patterns('',
-    (r'^$', 'views.index'),
+    (r'^$', 'ipinfo.ip.views.default'),
 
     (r'^ip/', include('ipinfo.ip.urls')),
 

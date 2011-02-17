@@ -2,43 +2,87 @@
 <html>
   <head>
     <meta http-equiv="content-type" content="text/html; charset=utf-8">
-    <title>IP信息查询</title>
-
-    <style type="text/css"><!--{% include "ipinfo.css" %}--></style>
-    <script language="javascript"><!--{% include "ipinfo.js" %}--></script>
-
+    <title>IP地址查询</title>
   </head>
 
   <body>
 
     {% include "header.html" %}
 
-    <h2>IP信息查询</h2>
-
-    <div class="ipinfo_data">
-      <h3>您查询的IP：{{ ip_string }}</h3> <!-- 十进制： {{ ip_value }} -->
-      <ul>
-        {% for info in ip_infos %}
-        <li>参考数据： {{info.province}} {{info.city}} {{info.isp}}</li>
-        {% empty %}
-        <li>抱歉，查无果。</li>
-        {% endfor %}
-        
-        <!-- TODO: 修正结果入口 -->
-      </ul>
-    </div>
+    <h2><a href="/">IP地址查询</a></h2>
     
     <div class="query_box">
-      <h3>请在下面输入您要查询的IP地址</h3>
-      IP地址：
-      <input type="text" id="query_box_ip" onmouseover="this.select();" maxlength="16"/>
-      <a href="#" onclick="return check_and_go(this);">查询</a>
-      <div id="query_box_error_msg" class="error_msg"></div>
-      <br/>
+      
       <div class="ip_client">
-        您的IP地址是：{{ ip_client_string }}，<a href="/ip/{{ip_client_string}}">点此直接查询</a>
+        您的IP是： {{ ip_client_string }}
+        <a href="/ip/{{ip_client_string}}">直接查询</a>
       </div>
+      
+      <h3>请在下面输入您要查询的IP地址</h3>
+      <form onsubmit="return check_and_go();" action="#">
+      IP地址：
+      <input type="text" id="query_box_ip" maxlength="16" onmouseover="this.select()"/>
+      <a href="#" onclick="return check_and_go();">查询</a>
+      </form>
+      <div id="query_box_error_msg" class="error_msg"></div>
+
     </div>
+
+    <p/>
+
+    {% if ip_string != None %}
+    <div class="ipinfo_data">
+      <table cellspacing="6px" border="0px">
+        <caption>{{ ip_string }}</caption>
+        <!--thead>
+          <tr><th>IP</th><th>信息</th></tr>
+        </thead-->
+        {% for info in ip_infos %}
+        <tr>
+          <td style="text-align:right">数据{% cycle '一' '二' '三' '四' '五' %}：</td>
+          <td>{{info.province}} {{info.city}} {{info.isp}}</td>
+        </tr>
+        {% empty %}
+        <tr><td style="text-align:center;color:red">抱歉，没有结果。</td></tr>
+        {% endfor %}
+      </table>
+        <!-- TODO: 修正结果入口 -->
+    </div>
+    {% else %}
+    <br/>
+    <br/>
+    <br/>
+    {% endif %}
+
+    <p/>
+
+    {% if old_query_history != None %}
+    <div class="query_history">
+      <!--h4>您的历史查询记录</h4> <a href='#' onclick=''>清空</a-->
+      <!--ul>
+        {% for ip,loc in old_query_history %}
+        <li>{{ ip }} {{ loc|default:'无结果' }}</li>
+        {% endfor %}
+      </ul-->
+      <table rules="groups" frame="hsides" cellspacing="0" cellpadding="6" border="2">
+        <caption>您最近几条查询记录</caption>
+        <thead>
+          <tr><th>IP</th><th>信息</th></tr>
+        </thead>
+        {% for ip,loc in old_query_history %}
+        <tr>
+          <td>{{ ip }}</td>
+          <td>{{ loc|default:'无' }}</td>
+        </tr>
+        {% endfor %}
+      </table>
+    </div>
+    {% endif %}
+
+    {% include "footer.html" %}
+
+    <style type="text/css"><!--{% include "ipinfo.css" %}--></style>
+    <script language="javascript"><!--{% include "ipinfo.js" %}--></script>
 
   </body>
 </html>
