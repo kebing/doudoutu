@@ -100,10 +100,9 @@ def default(request):
     ip_client_string = request.META['REMOTE_ADDR']
     ip_client_value = ip_convert.ipv4_from_string(ip_client_string)
     if COOKIE_QUERY_HISTORY in request.COOKIES:
-        old_query_history = request.COOKIES[COOKIE_QUERY_HISTORY]
+        new_query_history = request.COOKIES[COOKIE_QUERY_HISTORY]
         try:
-            old_query_history = jsonlib.read(old_query_history)
+            new_query_history = jsonlib.read(new_query_history)
         except jsonlib.ReadError:
-            old_query_history = []
-    new_query_history = old_query_history
+            new_query_history = []
     return render_to_response('ipinfo.html', locals())
