@@ -1,0 +1,88 @@
+<!-- -*-coding:utf-8-*- -->
+
+{%include "header.html"%}
+
+<div class="site_list">
+  <h3>团购名站</h3>
+  {% for s in site %}
+  <span class="site_item">
+    <a title="{{s.name}}" href="{{s.url}}" target="_blank">{{s.name}}</a>
+  </span>
+  {% endfor %}
+</div>
+
+<br/>
+
+<div>
+<p>
+当前位置： 
+城市：{{city_name}}  ｜
+分类：{{category}} ｜
+页码：{{page}}  ｜
+总数：{{total}}
+</p>
+</div>
+
+{% include "page_nav.html" %}
+
+<br/>
+
+<div class="deallist">
+
+  {% if deals|length == 0 %}
+
+  抱歉，暂无团购商品。
+
+  {% else %}
+
+  <div class="list">
+    
+
+    {%for deal in deals%}
+
+      <div class="deal">
+        <!-- 区域：商品图片 -->
+        <div class="image">
+          <a title="{{deal.title}}"
+             href="{{deal.url}}" target="_blank">
+            <img alt="{{deal.title}}" src="{{deal.image}}" style="weight: 175px; width:255px">
+          </a>
+        </div>
+        
+        <!-- 区域：商品信息-->
+        <div class="info">
+	  <h4>
+            {% if deal.site_name != '' %}
+            <a title="{{deal.site_name}}" href="{{deal.site_url}}" target="_blank">
+              【{{deal.site_name}}】
+            </a>
+            
+            {% endif %}
+            <a title="{{deal.title}}" href="{{deal.url}}" target="_blank">
+              {{ deal.title_short }}
+          </a></h4>
+	  <p class="p_1"> <span class="site"><a title="{{deal.title}}" href="{{deal.url}}" target="_blank">去看看！</a></span> </p>
+	  <p class="p_2">
+            <span>现价：<em class="price">¥{{deal.price}}</em></span>
+            <span>原价：<em class="value">¥{{deal.value}}</em></span>
+            <span>节省：<em class="saving">¥{{deal.saving}}</em></span>
+            <span>折扣：<em class="rebate">{{deal.rebate}}折</em></span>
+          </p>
+	  <p class="p_3">共有{{deal.bought}} 人购买。剩余时间：{{deal.time_end|timeuntil}}，抓取时间： {{deal.grabtime}}<div class="timeleft" id="timeleft_counter" timeleft="{{deal.timeleft}}" timebegin="{{deal.grabtime}}"><!-- show(timeleft-(now()-grabtime))--> </div></p>
+	</div>
+
+      </div>
+
+    {%endfor%}
+
+  </div>
+
+  {% endif %}
+
+</div>
+
+<div></div>
+
+{% include "page_nav.html" %}
+
+{%include "footer.html"%}
