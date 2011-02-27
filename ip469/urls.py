@@ -4,10 +4,12 @@ from django.conf.urls.defaults import *
 from django.contrib import admin
 admin.autodiscover()
 
+import settings
+
 urlpatterns = patterns(
     '',
     
-    (r'^$', 'ipinfo.ip.views.default'),
+    (r'^$', 'ip469.ip.views.default'),
     
     (r'^ip/', include('ip469.ip.urls')),
 

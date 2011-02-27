@@ -1,10 +1,20 @@
 # Django settings for ipinfo project.
 
-DEBUG = True
-TEMPLATE_DEBUG = DEBUG
+# release
+DEBUG = False
+TEMPLATE_DEBUG = False
+PROJECT_ROOT = '/www/1764598789.host/ip469_com/htdocs/ipinfo/'
+LOG_ROOT = '/www/1764598789.host/ip469_com/logs/'
+
+# # develop
+# DEBUG = True
+# TEMPLATE_DEBUG = DEBUG
+# PROJECT_ROOT = '/home/hepengfei/doudoutu/ipinfo/'
+# LOG_ROOT = '/tmp/'
+
 
 ADMINS = (
-    ('kebing', 'kebing.zh@gmail.com'),
+    ('sanmimu', 'sanmimu@qq.com'),
 )
 
 MANAGERS = ADMINS
@@ -12,7 +22,7 @@ MANAGERS = ADMINS
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql', # Add 'postgresql_psycopg2', 'postgresql', 'mysql', 'sqlite3' or 'oracle'.
-        'NAME': 'ipinfo',                      # Or path to database file if using sqlite3.
+        'NAME': 'ip469',                      # Or path to database file if using sqlite3.
         'USER': 'root',                      # Not used with sqlite3.
         'PASSWORD': 'sd-9898w',                  # Not used with sqlite3.
         'HOST': '127.0.0.1',                      # Set to empty string for localhost. Not used with sqlite3.
@@ -57,12 +67,8 @@ MEDIA_URL = ''
 # Examples: "http://foo.com/media/", "/media/".
 ADMIN_MEDIA_PREFIX = '/static/admin/'
 
-PROJECT_ROOT = '/home/hepengfei/doudoutu/ipinfo/'
-#PROJECT_ROOT = '/home/kebing/workspace/doudoutu/ipinfo/'
 STATIC_ROOT = PROJECT_ROOT + 'static/'
 STATIC_URL = '/static/'
-LOG_ROOT = '/tmp/'
-
 
 # Make this unique, and don't share it with anybody.
 SECRET_KEY = '-==^ibejpldmfd5r=j#+@eguo8f26_o!e^)m_r2*sbh=5m-%vl'

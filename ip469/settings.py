@@ -7,7 +7,7 @@ LOG_ROOT = '/tmp/'
 
 # DEBUG = False
 # TEMPLATE_DEBUG = False
-# PROJECT_ROOT = '/www/1764598789.host/ip469_com/htdocs/ipinfo/'
+# PROJECT_ROOT = '/www/1764598789.host/ip469_com/htdocs/ip469/'
 # LOG_ROOT = '/www/1764598789.host/ip469_com/logs/'
 
 ADMINS = (
@@ -24,7 +24,7 @@ DATABASES = {
         'PASSWORD': 'sd-9898w',                  # Not used with sqlite3.
         'HOST': '127.0.0.1',                      # Set to empty string for localhost. Not used with sqlite3.
         'PORT': '3306',                      # Set to empty string for default. Not used with sqlite3.
-    }
+    },
 }
 
 # Local time zone for this installation. Choices can be found here:

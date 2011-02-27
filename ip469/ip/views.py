@@ -22,8 +22,10 @@ def uniq(query_history):
     return uniq_history
 
 def get_client_ip(request):
-    #request.META['REMOTE_ADDR']
-    return request.META['HTTP_X_FORWARDED_FOR']
+    if 'HTTP_X_FORWARDED_FOR' in request.META.keys():
+        return request.META['HTTP_X_FORWARDED_FOR']
+    else:
+        return request.META['REMOTE_ADDR']
 
 def query_by_ipv4_inner(request, ipv4):
     """

@@ -19,8 +19,8 @@ class Ipv4Info(models.Model):
     objects = Ipv4InfoManager()
     def __unicode__(self):
         return self.province.decode('utf8') + ' ' + self.city.decode('utf8') + ' ' + self.isp.decode('utf8')
-    def __str__(self):
-        return encoding.iri_to_uri(unicode(self))
+    #def __str__(self):
+    #    return encoding.iri_to_uri(unicode(self))
 
 
 admin.site.register(Ipv4Info)
