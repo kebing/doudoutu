@@ -1,0 +1,102 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+          "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      lang="en" xml:lang="en">
+  <head>
+    <title>电影导航</title>
+    <meta http-equiv="Content-Type" content="text/html;charset=utf-8"/>
+
+    <style type="text/css">
+      <!--/*--><![CDATA[/*><!--*/
+  html { font-family: Times, serif; font-size: 12pt; }
+  .title  { text-align: center; }
+  .todo   { color: red; }
+  .done   { color: green; }
+  .tag    { background-color:lightblue; font-weight:normal }
+  .target { }
+  .timestamp { color: grey }
+  .timestamp-kwd { color: CadetBlue }
+  p.verse { margin-left: 3% }
+  pre {
+	border: 1pt solid #AEBDCC;
+	background-color: #F3F5F7;
+	padding: 5pt;
+	font-family: courier, monospace;
+        font-size: 90%;
+        overflow:auto;
+  }
+  table { border-collapse: collapse; }
+  td, th { vertical-align: top; }
+  dt { font-weight: bold; }
+  div.figure { padding: 0.5em; }
+  div.figure p { text-align: center; }
+  .linenr { font-size:smaller }
+  .code-highlighted {background-color:#ffff00;}
+  .org-info-js_info-navigation { border-style:none; }
+  #org-info-js_console-label { font-size:10px; font-weight:bold;
+                               white-space:nowrap; }
+  .org-info-js_search-highlight {background-color:#ffff00; color:#000000;
+                                 font-weight:bold; }
+  /*]]>*/-->
+    </style>
+    <script type="text/javascript">
+      <!--/*--><![CDATA[/*><!--*/
+ function CodeHighlightOn(elem, id)
+ {
+   var target = document.getElementById(id);
+   if(null != target) {
+     elem.cacheClassElem = elem.className;
+     elem.cacheClassTarget = target.className;
+     target.className = "code-highlighted";
+     elem.className   = "code-highlighted";
+   }
+ }
+ function CodeHighlightOff(elem, id)
+ {
+   var target = document.getElementById(id);
+   if(elem.cacheClassElem)
+     elem.className = elem.cacheClassElem;
+   if(elem.cacheClassTarget)
+     target.className = elem.cacheClassTarget;
+ }
+/*]]>*/-->
+    </script>
+  </head>
+
+  <body>
+
+    <!-- {% include "header.html" %}-->
+
+
+    <h1 class="title">电影导航</h1>
+
+
+    <!-- 菜单及分类导航 -->
+    <div>
+      菜单
+    </div>
+    
+    
+    <!-- 推荐区 -->
+    <div>
+      <h2>推荐区</h2>
+      <div>
+        <ul>
+          <li><a href="#"> 书影主 </a></li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- （最新）影视列表区 -->
+    <div id="dy-box">
+      <h2 id="sec-1">1 书影主 </h2>
+      <div id="text-1">
+
+      </div>
+    </div>
+
+
+    <!-- footer -->
+
+</body>
+</html>
