@@ -4,6 +4,7 @@
     <meta http-equiv="content-type" content="text/html; charset=utf-8">
     <title>IP地址查询</title>
     <style type="text/css"><!--{% include "ipinfo.css" %}--></style>
+    <script language="javascript"><!--{% include "ipinfo.js" %}--></script>
   </head>
 
   <body>
@@ -19,10 +20,10 @@
         <a href="/ip/{{ip_client_string}}">直接查询</a>
       </div>
       
-      <h3>请在下面输入您要查询的IP地址</h3>
+      <h3>请在下面输入您要查询的IP或域名</h3>
       <form onsubmit="return check_and_go();" action="#">
       IP地址：
-      <input type="text" id="query_box_ip" maxlength="16" onmouseover="this.select()"/>
+      <input type="text" id="query_box_ip" maxlength="64" onmouseover="this.select()"/>
       <a href="#" onclick="return check_and_go();">查询</a>
       </form>
       <div id="query_box_error_msg" class="error_msg"></div>
@@ -81,8 +82,6 @@
     {% endif %}
 
     {% include "footer.html" %}
-
-    <script language="javascript"><!--{% include "ipinfo.js" %}--></script>
 
   </body>
 </html>

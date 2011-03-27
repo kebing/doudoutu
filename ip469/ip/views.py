@@ -6,6 +6,7 @@ from django.shortcuts import render_to_response
 import jsonlib as json
 import logging
 from ip469 import settings
+import socket
 
 logging.basicConfig(filename=settings.LOG_ROOT + 'ip_views.log', level=logging.DEBUG)
 
@@ -38,9 +39,7 @@ def query_by_ipv4_inner(request, ipv4):
     ip_client_value = ip_convert.ipv4_from_string(ip_client_string)
     logger.debug('from ' + ip_client_string + ' query ' + ip_string + ' return ' + str(ip_infos.count()) + ' results')
     new_query_history = []
-    if ip_infos.count() <= 0:
-        new_query_history.append([ip_string,''])
-    else:
+    if ip_infos.count() > 0:
         new_query_history.append([ip_string, unicode(ip_infos[0])])
     if COOKIE_QUERY_HISTORY in request.COOKIES:
         old_query_history = request.COOKIES[COOKIE_QUERY_HISTORY]
@@ -84,7 +83,11 @@ def query_by_ipv4_string(request, ipv4_string):
     return query_by_ipv4(request, ipv4)
 
 
-
+def query_by_domain(request, domain):
+    """
+    """
+    ip = socket.gethostbyname(domain)
+    return query_by_ipv4_string(request, ip)
 
 
 def query_by_ipv6_inner(request, ipv6):
